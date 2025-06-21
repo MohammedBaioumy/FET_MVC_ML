@@ -293,6 +293,10 @@
 </style>
 
 <div class="constraints-container">
+    @if (TempData["Operation"] != null)
+    {
+        <partial name="View"></partial>
+    }
     <div class="back-btn-container">
         <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left"></i> Back to Dashboard

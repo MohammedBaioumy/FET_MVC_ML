@@ -309,11 +309,14 @@
 </style>
 
 <div class="departments-container">
+  
     <div class="back-btn-container">
         <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left"></i> Back to Dashboard
         </a>
     </div>
+
+
 
     <div class="page-header">
         <h1 class="page-title">Departments Management</h1>
@@ -331,10 +334,7 @@
         </a>
     </div>
 
-    @if (TempData["Operation"] != null)
-    {
-        <partial name="View"></partial>
-    }
+ 
 
     @if (TempData["Error"] != null)
     {
