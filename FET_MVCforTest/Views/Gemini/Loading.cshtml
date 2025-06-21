@@ -1,0 +1,168 @@
+﻿@{
+    ViewData["Title"] = "Generating Content";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 70vh;
+        text-align: center;
+    }
+
+    .loading-spinner {
+        width: 70px;
+        height: 70px;
+        border: 8px solid #f3f3f3;
+        border-top: 8px solid #6e8efb;
+        border-radius: 50%;
+        animation: spin 1.5s linear infinite;
+        margin-bottom: 2rem;
+    }
+
+    .loading-text {
+        font-size: 1.5rem;
+        color: #4a5568;
+        margin-bottom: 1.5rem;
+    }
+
+    .progress-container {
+        width: 80%;
+        max-width: 400px;
+        height: 10px;
+        background: #e2e8f0;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #6e8efb, #a777e3);
+        transition: width 0.5s ease;
+    }
+
+    .tips-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+
+    /* Dark Mode */
+    body.dark-mode .loading-spinner {
+        border-color: #2d3748;
+        border-top-color: #4b6cb7;
+    }
+
+    body.dark-mode .loading-text {
+        color: #e2e8f0;
+    }
+
+    body.dark-mode .progress-container {
+        background: #4a5568;
+    }
+
+    body.dark-mode .tips-container {
+        background: #2d3748;
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+<div class="loading-container">
+    <div class="loading-spinner"></div>
+    <h2 class="loading-text" id="loadingText">Generating Content...</h2>
+
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="tips-container">
+        <h4>Did you know?</h4>
+        <p id="tipText">Our AI is working hard to create the best content for you</p>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // تحديد نوع المحتوى الذي يتم توليده
+        const isArticle = window.location.href.includes("GenerateSubjectArticle");
+        const loadingText = document.getElementById("loadingText");
+
+        if (isArticle) {
+            loadingText.textContent = "Generating Article...";
+        } else {
+            loadingText.textContent = "Generating Timetable...";
+        }
+
+        // محاكاة شريط التقدم
+        const progressBar = document.getElementById('progressBar');
+        const tipText = document.getElementById('tipText');
+        const tips = isArticle ? [
+            "Analyzing subject content...",
+            "Researching scientific material...",
+            "Structuring the article...",
+            "Finalizing the content...",
+            "Almost done..."
+        ] : [
+            "Processing teacher availability...",
+            "Optimizing classroom allocations...",
+            "Checking all constraints...",
+            "Generating optimal schedule...",
+            "Finalizing the timetable..."
+        ];
+
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 15;
+            if (progress > 95) progress = 95;
+            progressBar.style.width = `${progress}%`;
+
+            // تغيير النصيحة كل 20% تقدم
+            if (progress % 20 < 5) {
+                tipText.textContent = tips[Math.floor(progress/20)];
+            }
+        }, 500);
+
+        // التحقق من حالة التوليد
+        function checkGenerationStatus() {
+            const url = isArticle ?
+                '@Url.Action("CheckArticleGenerationStatus", "Gemini")' :
+                '@Url.Action("CheckGenerationStatus", "Gemini")';
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.isComplete) {
+                        clearInterval(interval);
+                        progressBar.style.width = '100%';
+
+                        if (isArticle) {
+                            window.location.href = '@Url.Action("ViewSubjectArticle", "Gemini")' + '?subjectId=' + data.subjectId;
+                        } else {
+                            window.location.href = '@Url.Action("Generate", "Gemini")';
+                        }
+                    } else {
+                        setTimeout(checkGenerationStatus, 2000);
+                    }
+                });
+        }
+
+        // بدء التحقق بعد 3 ثواني
+        setTimeout(checkGenerationStatus, 3000);
+    </script>
+}

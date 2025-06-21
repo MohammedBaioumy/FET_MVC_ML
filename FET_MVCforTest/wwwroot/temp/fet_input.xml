@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<fet version="7.1.8">
+  <InstitutionName>My Institution</InstitutionName>
+  <Comments></Comments>
+  <NumberOfDaysPerWeek>5</NumberOfDaysPerWeek>
+  <NumberOfHoursPerDay>6</NumberOfHoursPerDay>
+  <Subjects>
+    <Subject>
+      <Name>os</Name>
+    </Subject>
+    <Subject>
+      <Name>COP</Name>
+    </Subject>
+    <Subject>
+      <Name>AI</Name>
+    </Subject>
+    <Subject>
+      <Name>BG</Name>
+    </Subject>
+    <Subject>
+      <Name>Network</Name>
+    </Subject>
+  </Subjects>
+  <Teachers>
+    <Teacher>
+      <Name>Dr AhmedSleem</Name>
+    </Teacher>
+    <Teacher>
+      <Name>Dr mostafa</Name>
+    </Teacher>
+    <Teacher>
+      <Name>Dr hanaa</Name>
+    </Teacher>
+  </Teachers>
+  <Students>
+    <Year>
+      <Name>G1</Name>
+      <NumberOfStudents>50</NumberOfStudents>
+      <Group>
+        <Name>G1</Name>
+        <NumberOfStudents>50</NumberOfStudents>
+      </Group>
+    </Year>
+    <Year>
+      <Name>G2</Name>
+      <NumberOfStudents>45</NumberOfStudents>
+      <Group>
+        <Name>G2</Name>
+        <NumberOfStudents>45</NumberOfStudents>
+      </Group>
+    </Year>
+    <Year>
+      <Name>G3</Name>
+      <NumberOfStudents>60</NumberOfStudents>
+      <Group>
+        <Name>G3</Name>
+        <NumberOfStudents>60</NumberOfStudents>
+      </Group>
+    </Year>
+  </Students>
+  <Activities_List>
+    <Activity>
+      <Teacher>Dr mostafa</Teacher>
+      <Subject>AI</Subject>
+      <Students>G2</Students>
+      <Duration>2</Duration>
+      <TotalDuration>2</TotalDuration>
+      <Id>8</Id>
+      <Activity_Group_Id>1</Activity_Group_Id>
+      <Active>true</Active>
+    </Activity>
+    <Activity>
+      <Teacher>Dr AhmedSleem</Teacher>
+      <Subject>os</Subject>
+      <Students>G2</Students>
+      <Duration>2</Duration>
+      <TotalDuration>2</TotalDuration>
+      <Id>10</Id>
+      <Activity_Group_Id>1</Activity_Group_Id>
+      <Active>true</Active>
+    </Activity>
+  </Activities_List>
+  <TimeConstraints>
+    <ConstraintTeacherMaxHoursDaily>
+      <Weight_Percentage>100</Weight_Percentage>
+      <Teacher>Dr AhmedSleem</Teacher>
+      <Maximum_Hours_Daily>6</Maximum_Hours_Daily>
+      <Active>true</Active>
+      <Comments>not more than 6 hours per day</Comments>
+    </ConstraintTeacherMaxHoursDaily>
+  </TimeConstraints>
+</fet>

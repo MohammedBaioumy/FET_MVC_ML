@@ -1,0 +1,63 @@
+:root {
+    /* Main Colors */
+    --primary-color: #4361ee;
+    --primary-hover: #3046c0;
+    --secondary-color: #2ec4b6;
+    --accent-color: #e63946;
+    --success-color: #2ec4b6;
+    --warning-color: #ff9f1c;
+    --info-color: #4cc9f0;
+    
+    /* Light Theme */
+    --background-light: #f8f9fa;
+    --surface-light: #ffffff;
+    --text-light: #2b2d42;
+    --text-secondary-light: #6c757d;
+    --border-light: rgba(0, 0, 0, 0.1);
+    --navbar-light: rgba(255, 255, 255, 0.95);
+    
+    /* Dark Theme */
+    --background-dark: #121212;
+    --surface-dark: #1e1e1e;
+    --text-dark: #e9ecef;
+    --text-secondary-dark: #adb5bd;
+    --border-dark: rgba(255, 255, 255, 0.1);
+    --navbar-dark: rgba(30, 30, 30, 0.95);
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 15px 30px rgba(0, 0, 0, 0.15);
+    
+    /* Form Colors */
+    --input-bg-light: #ffffff;
+    --input-bg-dark: #2a2a2a;
+    --input-border-light: #dee2e6;
+    --input-border-dark: #404040;
+    
+    /* Transitions */
+    --transition-fast: 0.2s;
+    --transition-normal: 0.3s;
+    --transition-slow: 0.5s;
+    
+    /* Border Radius */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 1rem;
+    --radius-full: 9999px;
+    
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    
+    /* Z-index */
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal: 1040;
+    --z-toast: 1050;
+} 

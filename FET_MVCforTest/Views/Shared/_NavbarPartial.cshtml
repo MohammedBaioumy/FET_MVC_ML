@@ -1,0 +1,73 @@
+@{
+    var currentPath = Context.Request.Path.ToString().ToLower();
+}
+
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
+    <div class="container">
+        <a class="navbar-brand" asp-controller="Home" asp-action="Welcome">
+            <i class="bi bi-calendar-check me-2"></i>FET Scheduler
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item @(currentPath.EndsWith("/welcome") ? "active" : "")">
+                    <a class="nav-link" asp-controller="Home" asp-action="Welcome">
+                        <i class="bi bi-house-door me-1"></i>Welcome
+                    </a>
+                </li>
+                <li class="nav-item @(currentPath.EndsWith("/index") ? "active" : "")">
+                    <a class="nav-link" asp-controller="Home" asp-action="Index">
+                        <i class="bi bi-grid me-1"></i>Dashboard
+                    </a>
+                </li>                
+              
+                @* <li class="nav-item @(currentPath.Contains("/subject") ? "active" : "")"> *@
+                @*     <a class="nav-link" asp-controller="Subject" asp-action="Index"> *@
+                @*         <i class="bi bi-building me-1"></i>Subjects *@
+                @*     </a> *@
+                @* </li> *@
+                @* <li class="nav-item @(currentPath.Contains("/teacher") ? "active" : "")"> *@
+                @*     <a class="nav-link" asp-controller="Teacher" asp-action="Index"> *@
+                @*         <i class="bi bi-building me-1"></i>Teachers *@
+                @*     </a> *@
+                @* </li> *@
+                @* <li class="nav-item @(currentPath.Contains("/activity") ? "active" : "")"> *@
+                @*     <a class="nav-link" asp-controller="Activity" asp-action="Index"> *@
+                @*         <i class="bi bi-building me-1"></i>Activitys *@
+                @*     </a> *@
+                @* </li> *@
+                @* <li class="nav-item @(currentPath.Contains("/room") ? "active" : "")"> *@
+                @*     <a class="nav-link" asp-controller="Room" asp-action="Index"> *@
+                @*         <i class="bi bi-building me-1"></i>Rooms *@
+                @*     </a> *@
+                @* </li> *@
+                @* <li class="nav-item @(currentPath.Contains("/studentsGroup") ? "active" : "")"> *@
+                @*     <a class="nav-link" asp-controller="StudentsGroup" asp-action="Index"> *@
+                @*         <i class="bi bi-building me-1"></i>Student Groups *@
+                @*     </a> *@
+                @* </li> *@
+            </ul>
+
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <div class="form-check form-switch d-flex align-items-center">
+                        <input class="form-check-input" type="checkbox" id="theme-toggle" aria-label="Toggle dark mode">
+                        <label class="form-check-label ms-2" for="theme-toggle" id="theme-label">🌞</label>
+                    </div>
+                </li>
+                <li class="nav-item ms-lg-3 me-auto">
+                    <form asp-controller="Account" asp-action="SignOut" method="post">
+                        <button type="submit" class="btn btn-outline-danger rounded-pill px-3 py-1">
+                            <i class="fas fa-sign-out-alt me-2"></i>
+                            Sign Out
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav> 

@@ -1,0 +1,257 @@
+﻿@using FET_MVCforTest.Data
+
+@{
+    ViewBag.Title = "Create New Activity";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Create Activity";
+}
+@inject AppDbContext _context;
+@model ActivityViewModel
+
+@{
+    var Teachers = new SelectList(_context.Teachers.ToList(), "Id", "Name");
+    var Subjects = new SelectList(_context.Subjects.ToList(), "Id", "Name");
+    var StudentsGroups = new SelectList(_context.StudentsGroups.ToList(), "Id", "Name");
+}
+
+<style>
+    /* أنماط الصفحة المعدلة */
+    .create-activity-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .create-activity-card {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        background-color: #ffffff;
+    }
+
+    body.dark-mode .create-activity-card {
+        background-color: #2d2d2d;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .create-activity-header {
+        background: linear-gradient(135deg, #3498db, #2c3e50);
+        color: white;
+        padding: 1.5rem;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    body.dark-mode .create-activity-header {
+        background: linear-gradient(135deg, #2980b9, #1a1a1a);
+    }
+
+    .create-activity-title {
+        font-weight: 700;
+        margin: 0;
+        font-size: 1.8rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    body.dark-mode .form-label {
+        color: #e0e0e0;
+    }
+
+    .form-control, .form-select {
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        border: 1px solid #ced4da;
+        transition: all 0.3s ease;
+    }
+
+    body.dark-mode .form-control,
+    body.dark-mode .form-select {
+        background-color: #3a3a3a;
+        border-color: #4a4a4a;
+        color: #f8f9fa;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+    }
+
+    body.dark-mode .form-control:focus,
+    body.dark-mode .form-select:focus {
+        border-color: #2980b9;
+        box-shadow: 0 0 0 0.25rem rgba(41, 128, 185, 0.25);
+    }
+
+    .btn-submit {
+        background-color: #2ecc71;
+        border: none;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+    }
+
+    body.dark-mode .btn-submit {
+        background-color: #27ae60;
+    }
+
+    .btn-submit:hover {
+        background-color: #27ae60;
+        transform: translateY(-2px);
+    }
+
+    body.dark-mode .btn-submit:hover {
+        background-color: #219653;
+    }
+
+    .btn-cancel {
+        background-color: #95a5a6;
+        border: none;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+    }
+
+    body.dark-mode .btn-cancel {
+        background-color: #7f8c8d;
+    }
+
+    .btn-cancel:hover {
+        background-color: #7f8c8d;
+        transform: translateY(-2px);
+    }
+
+    body.dark-mode .btn-cancel:hover {
+        background-color: #6c7a7d;
+    }
+
+    .text-danger {
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .back-arrow {
+        font-size: 2rem;
+        color: #495057;
+        transition: all 0.3s ease;
+    }
+
+    body.dark-mode .back-arrow {
+        color: #e0e0e0;
+    }
+
+    .back-arrow:hover {
+        color: #3498db;
+        transform: translateX(-5px);
+    }
+
+    body.dark-mode .back-arrow:hover {
+        color: #2980b9;
+    }
+
+    /* تأثيرات الحركة */
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in {
+        animation: fadeInUp 0.6s ease-out forwards;
+    }
+</style>
+
+<div class="create-activity-container animate-fade-in">
+    <div class="mb-4">
+       @*  <a href="@Url.Action("Index")" class="back-arrow" style="text-decoration: none;">
+            <i class="bi bi-arrow-left"></i>
+        </a> *@
+    </div>
+
+    <div class="create-activity-card">
+        <div class="create-activity-header">
+            <h1 class="create-activity-title">
+                <i class="bi bi-calendar-plus me-2"></i>Create New Activity
+            </h1>
+        </div>
+
+        <div class="card-body p-4">
+            <form asp-action="Create" method="post">
+                <div class="mb-4">
+                    <label asp-for="TeacherId" class="form-label">Teacher</label>
+                    <select asp-for="TeacherId" asp-items="@Teachers" class="form-select">
+                        <option value="">-- Select Teacher --</option>
+                    </select>
+                    <span asp-validation-for="TeacherId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="SubjectId" class="form-label">Subject</label>
+                    <select asp-for="SubjectId" asp-items="@Subjects" class="form-select">
+                        <option value="">-- Select Subject --</option>
+                    </select>
+                    <span asp-validation-for="SubjectId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="StudentsGroupId" class="form-label">Students Group</label>
+                    <select asp-for="StudentsGroupId" asp-items="@StudentsGroups" class="form-select">
+                        <option value="">-- Select Group --</option>
+                    </select>
+                    <span asp-validation-for="StudentsGroupId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Duration" class="form-label">Duration (minutes)</label>
+                    <input asp-for="Duration" class="form-control" placeholder="Enter duration : default is 120 miuntes" />
+                    <span asp-validation-for="Duration" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="NumOfSessionsPerWeek" class="form-label">Number Of Sessions Per Week</label>
+                    <input asp-for="NumOfSessionsPerWeek" class="form-control" placeholder="Enter number of sessions per week : default is 1" />
+                    <span asp-validation-for="NumOfSessionsPerWeek" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-center gap-3 mt-5">
+                    <button type="submit" class="btn btn-submit">
+                        <i class="bi bi-check-circle me-2"></i>Create
+                    </button>
+                    <a asp-action="Index" class="btn btn-cancel">
+                        <i class="bi bi-x-circle me-2"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // إضافة تأثيرات للعناصر عند التحميل
+        document.addEventListener('DOMContentLoaded', function() {
+            const formElements = document.querySelectorAll('.form-control, .form-select');
+            formElements.forEach((el, index) => {
+                el.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+}

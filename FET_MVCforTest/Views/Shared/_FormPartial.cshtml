@@ -1,0 +1,45 @@
+@model dynamic
+
+<form method="@(ViewData["Method"] ?? "post")" action="@ViewData["Action"]" class="needs-validation" novalidate>
+    @Html.AntiForgeryToken()
+    
+    <div class="row g-3">
+        @RenderBody()
+    </div>
+
+    <div class="mt-4 d-flex justify-content-between">
+        @if (ViewData["ShowBackButton"] == null || (bool)ViewData["ShowBackButton"])
+        {
+            <a href="@ViewData["BackUrl"]" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Back
+            </a>
+        }
+        else
+        {
+            <div></div>
+        }
+
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check2 me-1"></i>@(ViewData["SubmitText"] ?? "Submit")
+        </button>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        // Form validation
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
+} 

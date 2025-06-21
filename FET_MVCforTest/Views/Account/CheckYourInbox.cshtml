@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Check Your Inbox";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<div class="auth-header">
+    <svg class="auth-logo" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path fill="currentColor" d="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z" />
+    </svg>
+    <h1 class="auth-title">Check Your Inbox</h1>
+    <p class="auth-subtitle">We've sent a password reset link to your email</p>
+</div>
+
+<div class="text-center">
+    <p class="mb-4">If you don't see the email, check your spam folder or try resending it.</p>
+    <a href="https://mail.google.com/mail" class="btn btn-primary" target="_blank">
+        Open Gmail
+    </a>
+</div>
+
+<div class="auth-footer mt-4">
+    <p>
+        <a asp-action="SignIn" class="auth-link">Back to Sign In</a>
+    </p>
+</div>

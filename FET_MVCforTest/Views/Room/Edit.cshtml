@@ -1,0 +1,223 @@
+﻿@{
+    ViewData["Title"] = "Edit Room";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model RoomViewModel
+
+<style>
+    /* أنماط الصفحة المعدلة */
+    .edit-room-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .edit-room-card {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        background-color: #ffffff;
+    }
+
+    body.dark-mode .edit-room-card {
+        background-color: #2d2d2d;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .edit-room-header {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+        padding: 1.5rem;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    body.dark-mode .edit-room-header {
+        background: linear-gradient(135deg, #c0392b, #922b21);
+    }
+
+    .edit-room-title {
+        font-weight: 700;
+        margin: 0;
+        font-size: 1.8rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    body.dark-mode .form-label {
+        color: #e0e0e0;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        border: 1px solid #ced4da;
+        transition: all 0.3s ease;
+    }
+
+    body.dark-mode .form-control {
+        background-color: #3a3a3a;
+        border-color: #4a4a4a;
+        color: #f8f9fa;
+    }
+
+    .form-control:focus {
+        border-color: #e74c3c;
+        box-shadow: 0 0 0 0.25rem rgba(231, 76, 60, 0.25);
+    }
+
+    body.dark-mode .form-control:focus {
+        border-color: #c0392b;
+        box-shadow: 0 0 0 0.25rem rgba(192, 57, 43, 0.25);
+    }
+
+    .btn-update {
+        background-color: #e74c3c;
+        border: none;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+    }
+
+    body.dark-mode .btn-update {
+        background-color: #c0392b;
+    }
+
+    .btn-update:hover {
+        background-color: #c0392b;
+        transform: translateY(-2px);
+    }
+
+    body.dark-mode .btn-update:hover {
+        background-color: #922b21;
+    }
+
+    .btn-cancel {
+        background-color: #95a5a6;
+        border: none;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+    }
+
+    body.dark-mode .btn-cancel {
+        background-color: #7f8c8d;
+    }
+
+    .btn-cancel:hover {
+        background-color: #7f8c8d;
+        transform: translateY(-2px);
+    }
+
+    body.dark-mode .btn-cancel:hover {
+        background-color: #6c7a7d;
+    }
+
+    .text-danger {
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .back-arrow {
+        font-size: 2rem;
+        color: #495057;
+        transition: all 0.3s ease;
+    }
+
+    body.dark-mode .back-arrow {
+        color: #e0e0e0;
+    }
+
+    .back-arrow:hover {
+        color: #e74c3c;
+        transform: translateX(-5px);
+    }
+
+    body.dark-mode .back-arrow:hover {
+        color: #c0392b;
+    }
+
+    /* تأثيرات الحركة */
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in {
+        animation: fadeInUp 0.6s ease-out forwards;
+    }
+</style>
+
+<div class="edit-room-container animate-fade-in">
+    <div class="mb-4">
+       @*  <a href="@Url.Action("Index")" class="back-arrow" style="text-decoration: none;">
+            <i class="bi bi-arrow-left"></i>
+        </a> *@
+    </div>
+
+    <div class="edit-room-card">
+        <div class="edit-room-header">
+            <h1 class="edit-room-title">
+                <i class="bi bi-door-open me-2"></i>Edit Room
+            </h1>
+        </div>
+
+        <div class="card-body p-4">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+
+                <div class="mb-4">
+                    <label asp-for="Name" class="form-label">Room Name</label>
+                    <input asp-for="Name" class="form-control" placeholder="Enter room name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Capacity" class="form-label">Capacity</label>
+                    <input asp-for="Capacity" class="form-control" placeholder="Enter capacity" />
+                    <span asp-validation-for="Capacity" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-center gap-3 mt-5">
+                    <button type="submit" class="btn btn-update">
+                        <i class="bi bi-check-circle me-2"></i>Update
+                    </button>
+                    <a asp-action="Index" class="btn btn-cancel">
+                        <i class="bi bi-x-circle me-2"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // إضافة تأثيرات للعناصر عند التحميل
+        document.addEventListener('DOMContentLoaded', function() {
+            const formElements = document.querySelectorAll('.form-control');
+            formElements.forEach((el, index) => {
+                el.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+}

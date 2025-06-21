@@ -1,0 +1,286 @@
+/* Navbar Styles */
+.navbar {
+    background-color: var(--navbar-light);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-light);
+    transition: all var(--transition-normal) ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.dark-mode .navbar {
+    background-color: var(--navbar-dark);
+    border-bottom: 1px solid var(--border-dark);
+}
+
+.navbar-brand {
+    font-weight: 600;
+    color: var(--primary-color) !important;
+    transition: color var(--transition-fast) ease;
+}
+
+.navbar-brand:hover {
+    color: var(--primary-hover) !important;
+}
+
+.nav-link {
+    position: relative;
+    padding: 0.5rem 1rem;
+    color: var(--text-light) !important;
+    transition: color var(--transition-fast) ease;
+    font-weight: 500;
+}
+
+.dark-mode .nav-link {
+    color: var(--text-dark) !important;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--primary-color);
+    transition: width var(--transition-normal) ease;
+}
+
+.nav-link:hover::after,
+.nav-item.active .nav-link::after {
+    width: 100%;
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    border-radius: var(--radius-lg);
+    background-color: var(--surface-light);
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-normal) ease,
+                box-shadow var(--transition-normal) ease;
+    overflow: hidden;
+}
+
+.dark-mode .card {
+    background-color: var(--surface-dark);
+}
+
+.card.hover-lift:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+}
+
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid var(--border-light);
+    padding: var(--spacing-lg);
+}
+
+.dark-mode .card-header {
+    border-bottom: 1px solid var(--border-dark);
+}
+
+.card-body {
+    padding: var(--spacing-lg);
+}
+
+.card-footer {
+    background-color: transparent;
+    border-top: 1px solid var(--border-light);
+    padding: var(--spacing-lg);
+}
+
+.dark-mode .card-footer {
+    border-top: 1px solid var(--border-dark);
+}
+
+/* Button Styles */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    transition: all var(--transition-fast) ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn:active {
+    animation: buttonPop 0.2s ease-out;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+    color: white;
+}
+
+.btn-warning {
+    background-color: var(--warning-color);
+    border-color: var(--warning-color);
+    color: white;
+}
+
+.btn-info {
+    background-color: var(--info-color);
+    border-color: var(--info-color);
+    color: white;
+}
+
+/* Form Styles */
+.form-control {
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--input-border-light);
+    background-color: var(--input-bg-light);
+    transition: all var(--transition-fast) ease;
+}
+
+.dark-mode .form-control {
+    background-color: var(--input-bg-dark);
+    border-color: var(--input-border-dark);
+    color: var(--text-dark);
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.25);
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary-light);
+}
+
+.dark-mode .form-label {
+    color: var(--text-secondary-dark);
+}
+
+/* Table Styles */
+.table {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: var(--spacing-lg);
+}
+
+.table thead th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 500;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: none;
+}
+
+.table tbody td {
+    padding: var(--spacing-md) var(--spacing-lg);
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.dark-mode .table tbody td {
+    border-bottom: 1px solid var(--border-dark);
+}
+
+.table tbody tr:hover {
+    background-color: rgba(67, 97, 238, 0.05);
+}
+
+.dark-mode .table tbody tr:hover {
+    background-color: rgba(67, 97, 238, 0.1);
+}
+
+/* Create/Edit Form Styles */
+.create-form,
+.edit-form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.btn-icon {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+}
+
+/* Download Button */
+.btn-download {
+    background-color: var(--success-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all var(--transition-fast) ease;
+}
+
+.btn-download:hover {
+    background-color: #25a898;
+    transform: translateY(-2px);
+}
+
+.btn-download i {
+    font-size: 1.2em;
+}
+
+/* Alert Styles */
+.alert {
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    border: none;
+    box-shadow: var(--shadow-sm);
+}
+
+.alert-success {
+    background-color: rgba(46, 196, 182, 0.1);
+    color: var(--success-color);
+}
+
+.alert-warning {
+    background-color: rgba(255, 159, 28, 0.1);
+    color: var(--warning-color);
+}
+
+.alert-danger {
+    background-color: rgba(230, 57, 70, 0.1);
+    color: var(--accent-color);
+} 

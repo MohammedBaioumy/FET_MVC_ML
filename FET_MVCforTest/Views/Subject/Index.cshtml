@@ -1,0 +1,478 @@
+﻿@model IEnumerable<SubjectViewModel>
+@using FET_MVCforTest.Data
+@inject AppDbContext _context
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Subjects";
+}
+
+<style>
+    /* أنماط أساسية متوافقة مع الـ Dashboard */
+    :root {
+        --primary-blue: #0d6efd;
+        --primary-blue-dark: #4dabf7;
+        --danger: #dc3545;
+        --danger-dark: #ff6b6b;
+        --warning: #ffc107;
+        --warning-dark: #ffd43b;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        color: #212529;
+        transition: all 0.3s ease;
+    }
+
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+
+    /* تحسينات للكروت */
+    .subject-card {
+        position: relative;
+        background-color: #ffffff;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+        height: 100%;
+        z-index: 1;
+    }
+
+    body.dark-mode .subject-card {
+        background-color: #242424;
+        border: 1px solid #3a3a3a;
+        box-shadow: 0 4px 18px rgba(255, 255, 255, 0.05);
+    }
+
+    .subject-card:hover {
+        transform: translateY(-10px) scale(1.03);
+        box-shadow: 0 8px 25px rgba(13, 110, 253, 0.25);
+    }
+
+    body.dark-mode .subject-card:hover {
+        box-shadow: 0 8px 25px rgba(77, 171, 247, 0.35);
+    }
+
+    .subject-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: var(--primary-blue);
+        transition: all 0.3s ease;
+    }
+
+    body.dark-mode .subject-icon {
+        color: var(--primary-blue-dark);
+    }
+
+    .subject-card:hover .subject-icon {
+        transform: scale(1.2);
+    }
+
+    /* قسم المادة */
+    .subject-department {
+        display: inline-block;
+        margin: 0.5rem 0;
+        padding: 0.35rem 0.75rem;
+        background-color: #f8f9fa;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        border: 1px solid #dee2e6;
+    }
+
+    body.dark-mode .subject-department {
+        background-color: #333;
+        border-color: #444;
+        color: #f8f9fa;
+    }
+
+    /* تحسينات للأزرار */
+    .btn-subject {
+        border-radius: 50px;
+        padding: 8px 20px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-edit {
+        background-color: var(--warning);
+        border-color: var(--warning);
+    }
+
+    body.dark-mode .btn-edit {
+        background-color: var(--warning-dark);
+        border-color: var(--warning-dark);
+    }
+
+    .btn-delete {
+        background-color: var(--danger);
+        border-color: var(--danger);
+    }
+
+    body.dark-mode .btn-delete {
+        background-color: var(--danger-dark);
+        border-color: var(--danger-dark);
+    }
+
+    .btn-back {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn-add {
+        background-color: var(--primary-blue);
+        border-color: var(--primary-blue);
+        animation: pulse 2s infinite;
+    }
+
+    body.dark-mode .btn-add {
+        background-color: var(--primary-blue-dark);
+        border-color: var(--primary-blue-dark);
+    }
+
+    /* تأثيرات حركية */
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes pulse {
+        0% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
+        }
+
+        70% {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 10px rgba(13, 110, 253, 0);
+        }
+
+        100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+        }
+    }
+
+    @@keyframes ripple {
+        0% {
+            transform: scale(0);
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+
+    .btn-ripple {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-ripple:after {
+            content: "";
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+            background-repeat: no-repeat;
+            background-position: 50%;
+            transform: scale(10, 10);
+            opacity: 0;
+            transition: transform .5s, opacity 1s;
+        }
+
+        .btn-ripple:active:after {
+            transform: scale(0, 0);
+            opacity: .3;
+            transition: 0s;
+        }
+
+    /* تحسينات للعنوان */
+    .page-title {
+        font-weight: 700;
+        margin-bottom: 2rem;
+        position: relative;
+        display: inline-block;
+    }
+
+        .page-title:after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            background: var(--primary-blue);
+            bottom: -10px;
+            left: 25%;
+            border-radius: 2px;
+        }
+
+    body.dark-mode .page-title:after {
+        background: var(--primary-blue-dark);
+    }
+
+    /* تأثيرات إضافية للكروت */
+    .subject-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: var(--card-accent);
+        transition: all 0.3s ease;
+    }
+
+    body.dark-mode .subject-card::after {
+        height: 8px;
+        box-shadow: 0 0 15px var(--card-accent);
+    }
+
+    /* ألوان مختلفة لكل كارت */
+    .subject-card:nth-child(1) {
+        --card-accent: #3498db;
+    }
+
+    .subject-card:nth-child(2) {
+        --card-accent: #2ecc71;
+    }
+
+    .subject-card:nth-child(3) {
+        --card-accent: #e74c3c;
+    }
+
+    .subject-card:nth-child(4) {
+        --card-accent: #f39c12;
+    }
+
+    .subject-card:nth-child(5) {
+        --card-accent: #9b59b6;
+    }
+
+    .subject-card:nth-child(6) {
+        --card-accent: #1abc9c;
+    }
+
+    /* تأثير التوهج في الدارك مود */
+    @@keyframes glow {
+        0% {
+            box-shadow: 0 0 5px var(--card-accent);
+        }
+
+        50% {
+            box-shadow: 0 0 20px var(--card-accent);
+        }
+
+        100% {
+            box-shadow: 0 0 5px var(--card-accent);
+        }
+    }
+
+    body.dark-mode .subject-card:hover {
+        animation: glow 2s infinite;
+    }
+
+    /* تحسينات لـ Modal */
+    .modal-content {
+        border-radius: 12px;
+        overflow: hidden;
+        border: none;
+    }
+
+    body.dark-mode .modal-content {
+        background-color: #2d2d2d;
+        border: 1px solid #444;
+    }
+
+    .modal-header {
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    body.dark-mode .modal-header {
+        background-color: #1a1a1a;
+        border-bottom: 1px solid #444;
+    }
+
+    .modal-footer {
+        border-top: 1px solid rgba(0,0,0,0.1);
+    }
+
+    body.dark-mode .modal-footer {
+        border-top: 1px solid #444;
+    }
+
+    .modal-title {
+        color: inherit;
+    }
+
+    body.dark-mode .modal-title {
+        color: #f8f9fa;
+    }
+
+    .delete-confirmation {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 15px 0;
+    }
+
+    body.dark-mode .delete-confirmation {
+        background-color: #333;
+    }
+</style>
+
+<div class="container py-5 animate__animated animate__fadeIn">
+    @if (TempData["Operation"] != null)
+    {
+        <partial name="View"></partial>
+    }
+
+    <h1 class="text-center page-title mb-5">
+        <i class="bi bi-journal-bookmark me-2"></i>Subjects Management
+    </h1>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger animate__animated animate__shakeX">@TempData["Error"]</div>
+    }
+
+    <div class="d-flex justify-content-between mb-4">
+        <a href="@Url.Action("Index", "Home")" class="btn btn-back btn-ripple">
+            <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+        </a>
+        <a href="@Url.Action("Create")" class="btn btn-add btn-ripple">
+            <i class="bi bi-plus-circle me-1"></i> Add New Subject
+        </a>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var subject in Model.ToList())
+        {
+            var department = _context.Departments.FirstOrDefault(d => d.Id == subject.DepartmentId);
+
+            <div class="col-md-4 animate__animated animate__fadeInUp" style="animation-delay: @(Model.ToList().IndexOf(subject) * 0.1+'s')">
+                <div class="subject-card">
+                    <i class="bi bi-journal-bookmark subject-icon"></i>
+                    <h3 class="card-title mb-3">@subject.Name</h3>
+
+                    @if (department != null)
+                    {
+                        <div class="subject-department">
+                            <i class="bi bi-building me-1"></i>@department.Name
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="subject-department text-danger">
+                            <i class="bi bi-exclamation-triangle me-1"></i>No Department
+                        </div>
+                    }
+
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="@Url.Action("Edit", new { id = subject.Id })"
+                           class="btn btn-edit btn-subject btn-ripple me-2">
+                            <i class="bi bi-pencil-square me-1"></i> Edit
+                        </a>
+
+                        <button type="button"
+                                class="btn btn-delete btn-subject btn-ripple"
+                                data-id="@subject.Id"
+                                data-bs-toggle="modal"
+                                data-bs-target="#DeleteModal-@subject.Id">
+                            <i class="bi bi-trash me-1"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal محسنة -->
+            <div class="modal fade" id="DeleteModal-@subject.Id" tabindex="-1" aria-labelledby="DeleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="DeleteModalLabel">
+                                <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+                                Confirm Subject Deletion
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete the following subject?</p>
+                            <div class="delete-confirmation">
+                                <h5><strong>@subject.Name</strong></h5>
+                                @if (department != null)
+                                {
+                                    <p class="mb-2"><i class="bi bi-building me-1"></i>Department: @department.Name</p>
+                                }
+                                <p class="text-danger mb-0"><i class="bi bi-exclamation-circle-fill me-1"></i>This action cannot be undone!</p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="bi bi-x-circle me-1"></i> Cancel
+                            </button>
+                            <form asp-action="Delete" asp-route-id="@subject.Id" method="post">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="bi bi-trash-fill me-1"></i> Confirm Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // تأثير الريبل للأزرار
+        document.querySelectorAll('.btn-ripple').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                let x = e.clientX - e.target.getBoundingClientRect().left;
+                let y = e.clientY - e.target.getBoundingClientRect().top;
+
+                let ripples = document.createElement('span');
+                ripples.style.left = x + 'px';
+                ripples.style.top = y + 'px';
+                this.appendChild(ripples);
+
+                setTimeout(() => {
+                    ripples.remove();
+                }, 1000);
+            });
+        });
+
+        // تأثير التحويم على الكروت
+        document.querySelectorAll('.subject-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-10px) scale(1.03)';
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+}

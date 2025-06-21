@@ -1,0 +1,197 @@
+﻿@model FET_MVCforTest.Models.SubjectArticleViewModel
+@{
+    ViewData["Title"] = "Subject Article";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* أنماط عامة */
+    .article-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 20px;
+    }
+
+    /* أنماط البطاقة */
+    .article-card {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+    }
+
+    /* الوضع الفاتح */
+    .article-card {
+        background: white;
+    }
+
+        .article-card .card-header {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+        }
+
+    .article-content {
+        color: #333;
+    }
+
+    /* الوضع الداكن */
+    body.dark-mode .article-card {
+        background: #2d3748;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+        body.dark-mode .article-card .card-header {
+            background: linear-gradient(135deg, #4b6cb7, #182848);
+        }
+
+    body.dark-mode .article-content {
+        color: #e2e8f0;
+    }
+
+    /* زر العودة لأعلى */
+    .back-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6e8efb, #a777e3);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 99;
+        opacity: 0;
+        visibility: hidden;
+    }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+    body.dark-mode .back-to-top {
+        background: linear-gradient(135deg, #4b6cb7, #182848);
+    }
+
+    /* تحسينات للأزرار */
+    .action-buttons .btn {
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #6e8efb, #a777e3);
+        border: none;
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #10b981, #34d399);
+        border: none;
+    }
+
+    body.dark-mode .btn-outline-secondary {
+        border-color: #4a5568;
+        color: #a0aec0;
+    }
+
+        body.dark-mode .btn-outline-secondary:hover {
+            background: #4a5568;
+            color: white;
+        }
+</style>
+
+<div class="article-container">
+    <!-- زر العودة للخلف في الأعلى -->
+    <div class="mb-4">
+        <a href="@Url.Action("SubjectArticles")" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to all Subjects
+        </a>
+    </div>
+
+    <!-- عنوان المقال -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-6">
+            <span class="text-gradient">@Model.SubjectName</span>
+            <small class="text-muted">@Model.ScientificName</small>
+        </h1>
+
+        <div class="action-buttons">
+            <a href="@Url.Action("GenerateSubjectArticle", new { subjectId = Model.SubjectId })"
+               class="btn btn-primary me-2">
+                <i class="bi bi-magic"></i> Generate/Regenerate
+            </a>
+            @* <a href="@Url.Action("Loading", "Gemini")?redirect=GenerateSubjectArticle&subjectId=Model.SubjectId">Generate Article</a> *@
+            <a href="@Url.Action("DownloadArticlePdf", new { subjectId = Model.SubjectId })"
+               class="btn btn-success">
+                <i class="bi bi-download"></i> Download PDF
+            </a>
+        </div>
+    </div>
+
+    <!-- محتوى المقال -->
+    <div class="article-card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-bold">Scientific Article</span>
+                <small>Generated: @Model.GeneratedDate.ToString("yyyy-MM-dd HH:mm")</small>
+            </div>
+        </div>
+        <div class="card-body">
+            @if (string.IsNullOrWhiteSpace(Model.ArticleContent) || Model.ArticleContent == "No article generated yet.")
+            {
+                <div class="alert alert-info">
+                    No article has been generated for this subject yet. Click the "Generate" button to create one.
+                </div>
+            }
+            else
+            {
+                <div class="article-content" style="white-space: pre-line;">@Model.ArticleContent</div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- زر العودة لأعلى الصفحة -->
+<div class="back-to-top" id="backToTop">
+    <i class="bi bi-arrow-up"></i>
+</div>
+
+@section Scripts {
+    <script>
+        // زر العودة لأعلى الصفحة
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        backToTop.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // تأثير التدرج اللوني للنص
+        const textGradient = document.querySelector('.text-gradient');
+        if (textGradient) {
+            textGradient.style.background = 'linear-gradient(135deg, #6e8efb, #a777e3)';
+            textGradient.style.webkitBackgroundClip = 'text';
+            textGradient.style.backgroundClip = 'text';
+            textGradient.style.color = 'transparent';
+        }
+    </script>
+}

@@ -1,0 +1,27 @@
+@model dynamic
+
+<div class="card h-100 @ViewData["CardClass"]">
+    @if (!string.IsNullOrEmpty(ViewData["CardHeader"]?.ToString()))
+    {
+        <div class="card-header bg-transparent border-0">
+            <h5 class="card-title mb-0">@ViewData["CardHeader"]</h5>
+        </div>
+    }
+    <div class="card-body">
+        @if (!string.IsNullOrEmpty(ViewData["CardTitle"]?.ToString()))
+        {
+            <h5 class="card-title">@ViewData["CardTitle"]</h5>
+        }
+        @if (!string.IsNullOrEmpty(ViewData["CardSubtitle"]?.ToString()))
+        {
+            <h6 class="card-subtitle mb-2 text-muted">@ViewData["CardSubtitle"]</h6>
+        }
+        @RenderBody()
+    </div>
+    @if (IsSectionDefined("CardFooter"))
+    {
+        <div class="card-footer bg-transparent border-0">
+            @RenderSection("CardFooter")
+        </div>
+    }
+</div> 

@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "Generated Schedule - FET";
+}
+
+<style>
+    .schedule-container {
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .schedule-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .schedule-table {
+        margin-top: 2rem;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .action-buttons {
+        margin-top: 2rem;
+        text-align: center;
+    }
+</style>
+
+<div class="schedule-container">
+    <div class="schedule-header">
+        <h1>Generated Weekly Schedule</h1>
+        <p class="lead">Your timetable has been successfully generated from the Excel file</p>
+    </div>
+
+    <div class="schedule-table">
+        @Html.Raw(ViewBag.ScheduleTable)
+    </div>
+
+    <div class="action-buttons">
+        <a href="@Url.Action("GenerateFromExcel")" class="btn btn-primary">
+            <i class="bi bi-file-earmark-excel"></i> Import Another File
+        </a>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-success">
+            <i class="bi bi-house-door"></i> Go to Dashboard
+        </a>
+    </div>
+</div>

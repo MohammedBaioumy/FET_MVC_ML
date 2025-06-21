@@ -1,0 +1,46 @@
+﻿@model SignInViewModel
+@{
+    ViewData["Title"] = "Sign In";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<form asp-action="SignIn" method="post" class="animate__animated animate__fadeIn">
+    <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+    <div class="form-group animate__animated animate__fadeInUp">
+        <label asp-for="Email" class="form-label">
+            <i class="fas fa-envelope"></i> Email Address
+        </label>
+        <input asp-for="Email" class="form-control" placeholder="student@college.edu" />
+        <span asp-validation-for="Email" class="field-validation-error"></span>
+    </div>
+
+    <div class="form-group animate__animated animate__fadeInUp animate__delay-1s">
+        <label asp-for="Password" class="form-label">
+            <i class="fas fa-lock"></i> Password
+        </label>
+        <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" />
+        <button type="button" class="password-toggle">
+            <i class="far fa-eye"></i>
+        </button>
+        <span asp-validation-for="Password" class="field-validation-error"></span>
+    </div>
+
+    <div class="checkbox-container animate__animated animate__fadeInUp animate__delay-2s">
+        <input asp-for="RememberMe" type="checkbox" class="checkbox-input" id="rememberMe" />
+        <label for="rememberMe" class="checkbox-label">Remember me on this device</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary animate__animated animate__fadeInUp animate__delay-3s">
+        <i class="fas fa-sign-in-alt"></i> Sign In
+    </button>
+
+    <div class="auth-footer animate__animated animate__fadeInUp animate__delay-4s">
+        <p>
+            Don't have an account? <a asp-action="SignUp" class="auth-link">Register Now</a>
+        </p>
+        <p>
+            <a asp-action="ForgetPassword" class="auth-link">Forgot your password?</a>
+        </p>
+    </div>
+</form>

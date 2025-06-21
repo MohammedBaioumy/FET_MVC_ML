@@ -1,0 +1,86 @@
+/* Base Styles */
+html, body {
+    height: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: var(--background-light);
+    color: var(--text-light);
+    transition: background-color var(--transition-speed) ease, 
+                color var(--transition-speed) ease;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+body.dark-mode {
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+}
+
+/* Container */
+.container {
+    width: 100%;
+    padding-right: var(--bs-gutter-x, 0.75rem);
+    padding-left: var(--bs-gutter-x, 0.75rem);
+    margin-right: auto;
+    margin-left: auto;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 6px;
+    padding: 0.5rem 1.25rem;
+    transition: all var(--transition-speed) ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+/* Form Controls */
+.form-control {
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    padding: 0.75rem 1rem;
+    transition: all var(--transition-speed) ease;
+}
+
+.dark-mode .form-control {
+    background-color: var(--input-bg-dark);
+    border-color: var(--input-border-dark);
+    color: var(--text-dark);
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+/* Links */
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color var(--transition-speed) ease;
+}
+
+a:hover {
+    color: #2980b9;
+}
+
+/* Text Utilities */
+.text-muted {
+    color: #6c757d !important;
+}
+
+.dark-mode .text-muted {
+    color: #a0a0a0 !important;
+} 

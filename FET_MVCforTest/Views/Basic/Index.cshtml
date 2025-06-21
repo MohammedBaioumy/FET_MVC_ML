@@ -1,0 +1,448 @@
+﻿@{
+    ViewData["Title"] = "Basic Settings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model BasicViewModel
+
+<style>
+    /* أنماط أساسية متوافقة مع الـ Dashboard */
+    :root {
+        --primary-blue: #0d6efd;
+        --primary-blue-dark: #4dabf7;
+        --danger: #dc3545;
+        --danger-dark: #ff6b6b;
+        --warning: #ffc107;
+        --warning-dark: #ffd43b;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        color: #212529;
+        transition: all 0.3s ease;
+    }
+
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+
+    /* تحسينات للكروت */
+    .basic-card {
+        position: relative;
+        background-color: #ffffff;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+        height: 100%;
+        z-index: 1;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    body.dark-mode .basic-card {
+        background-color: #242424;
+        border: 1px solid #3a3a3a;
+        box-shadow: 0 4px 18px rgba(255, 255, 255, 0.05);
+    }
+
+    .basic-card:hover {
+        transform: translateY(-10px) scale(1.03);
+        box-shadow: 0 8px 25px rgba(13, 110, 253, 0.25);
+    }
+
+    body.dark-mode .basic-card:hover {
+        box-shadow: 0 8px 25px rgba(77, 171, 247, 0.35);
+    }
+
+    .basic-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: var(--primary-blue);
+        transition: all 0.3s ease;
+    }
+
+    body.dark-mode .basic-icon {
+        color: var(--primary-blue-dark);
+    }
+
+    .basic-card:hover .basic-icon {
+        transform: scale(1.2);
+    }
+
+    /* تحسينات للأزرار */
+    .btn-basic {
+        border-radius: 50px;
+        padding: 8px 20px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-edit {
+        background-color: var(--warning);
+        border-color: var(--warning);
+    }
+
+    body.dark-mode .btn-edit {
+        background-color: var(--warning-dark);
+        border-color: var(--warning-dark);
+    }
+
+    .btn-delete {
+        background-color: var(--danger);
+        border-color: var(--danger);
+    }
+
+    body.dark-mode .btn-delete {
+        background-color: var(--danger-dark);
+        border-color: var(--danger-dark);
+    }
+
+    .btn-back {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn-add {
+        background-color: var(--primary-blue);
+        border-color: var(--primary-blue);
+        animation: pulse 2s infinite;
+    }
+
+    body.dark-mode .btn-add {
+        background-color: var(--primary-blue-dark);
+        border-color: var(--primary-blue-dark);
+    }
+
+    /* تأثيرات حركية */
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes pulse {
+        0% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
+        }
+
+        70% {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 10px rgba(13, 110, 253, 0);
+        }
+
+        100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+        }
+    }
+
+    @@keyframes ripple {
+        0% {
+            transform: scale(0);
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+
+    .btn-ripple {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-ripple:after {
+            content: "";
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+            background-repeat: no-repeat;
+            background-position: 50%;
+            transform: scale(10, 10);
+            opacity: 0;
+            transition: transform .5s, opacity 1s;
+        }
+
+        .btn-ripple:active:after {
+            transform: scale(0, 0);
+            opacity: .3;
+            transition: 0s;
+        }
+
+    /* تحسينات للعنوان */
+    .page-title {
+        font-weight: 700;
+        margin-bottom: 2rem;
+        position: relative;
+        display: inline-block;
+    }
+
+        .page-title:after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            background: var(--primary-blue);
+            bottom: -10px;
+            left: 25%;
+            border-radius: 2px;
+        }
+
+    body.dark-mode .page-title:after {
+        background: var(--primary-blue-dark);
+    }
+
+    /* تأثير التوهج في الدارك مود */
+    @@keyframes glow {
+        0% {
+            box-shadow: 0 0 5px var(--primary-blue);
+        }
+
+        50% {
+            box-shadow: 0 0 20px var(--primary-blue);
+        }
+
+        100% {
+            box-shadow: 0 0 5px var(--primary-blue);
+        }
+    }
+
+    body.dark-mode .basic-card:hover {
+        animation: glow 2s infinite;
+    }
+
+    /* تحسينات لـ Modal */
+    .modal-content {
+        border-radius: 12px;
+        overflow: hidden;
+        border: none;
+    }
+
+    body.dark-mode .modal-content {
+        background-color: #2d2d2d;
+        border: 1px solid #444;
+    }
+
+    .modal-header {
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    body.dark-mode .modal-header {
+        background-color: #1a1a1a;
+        border-bottom: 1px solid #444;
+    }
+
+    .modal-footer {
+        border-top: 1px solid rgba(0,0,0,0.1);
+    }
+
+    body.dark-mode .modal-footer {
+        border-top: 1px solid #444;
+    }
+
+    .modal-title {
+        color: inherit;
+    }
+
+    body.dark-mode .modal-title {
+        color: #f8f9fa;
+    }
+
+    .delete-confirmation {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 15px 0;
+    }
+
+    body.dark-mode .delete-confirmation {
+        background-color: #333;
+    }
+
+    .basic-details {
+        text-align: left;
+        margin: 20px 0;
+    }
+
+    .detail-row {
+        display: flex;
+        margin-bottom: 10px;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        min-width: 150px;
+    }
+
+    .detail-value {
+        flex: 1;
+    }
+</style>
+
+<div class="container py-5 animate__animated animate__fadeIn">
+    @if (TempData["Operation"] != null)
+    {
+        <partial name="View"></partial>
+    }
+
+    <h1 class="text-center page-title mb-5">
+        <i class="bi bi-gear-fill me-2"></i>Basic Settings
+    </h1>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger animate__animated animate__shakeX">@TempData["Error"]</div>
+    }
+
+    <div class="d-flex justify-content-between mb-4">
+        <a href="@Url.Action("Index", "Home")" class="btn btn-back btn-ripple">
+            <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+        </a>
+
+        @if (Model == null)
+        {
+            <a href="@Url.Action("Create")" class="btn btn-add btn-ripple">
+                <i class="bi bi-plus-circle me-1"></i> Add Basic Settings
+            </a>
+        }
+    </div>
+
+    @if (Model == null)
+    {
+        <div class="container align-items-center py-5 text-center">
+            <p>No basic settings have been configured yet.</p>
+            <p>Please add the basic settings to continue.</p>
+        </div>
+    }
+    else
+    {
+        <div class="animate__animated animate__fadeInUp">
+            <div class="basic-card">
+                <i class="bi bi-gear-wide-connected basic-icon"></i>
+                <h3 class="card-title mb-4">@Model.Name</h3>
+
+                <div class="basic-details">
+                    <div class="detail-row">
+                        <div class="detail-label">Start Day:</div>
+                        <div class="detail-value">@Model.startOfWeek</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">End Day:</div>
+                        <div class="detail-value">@Model.endOfWeek</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Start Time:</div>
+                        <div class="detail-value">@Model.TimeStart.ToString("hh\\:mm")</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">End Time:</div>
+                        <div class="detail-value">@Model.TimeEnd.ToString("hh\\:mm")</div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <a href="@Url.Action("Edit", new { id = Model.Id })"
+                       class="btn btn-edit btn-basic btn-ripple me-2">
+                        <i class="bi bi-pencil-square me-1"></i> Edit
+                    </a>
+
+                    <button type="button"
+                            class="btn btn-delete btn-basic btn-ripple"
+                            data-id="@Model.Id"
+                            data-bs-toggle="modal"
+                            data-bs-target="#DeleteModal-@Model.Id">
+                        <i class="bi bi-trash me-1"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div class="modal fade" id="DeleteModal-@Model.Id" tabindex="-1" aria-labelledby="DeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="DeleteModalLabel">
+                            <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+                            Confirm Deletion
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete the basic settings?</p>
+                        <div class="delete-confirmation">
+                            <h5><strong>@Model.Name</strong></h5>
+                            <p class="text-danger mb-0"><i class="bi bi-exclamation-circle-fill me-1"></i>This action cannot be undone!</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle me-1"></i> Cancel
+                        </button>
+                        <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash-fill me-1"></i> Confirm Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // تأثير الريبل للأزرار
+        document.querySelectorAll('.btn-ripple').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                let x = e.clientX - e.target.getBoundingClientRect().left;
+                let y = e.clientY - e.target.getBoundingClientRect().top;
+
+                let ripples = document.createElement('span');
+                ripples.style.left = x + 'px';
+                ripples.style.top = y + 'px';
+                this.appendChild(ripples);
+
+                setTimeout(() => {
+                    ripples.remove();
+                }, 1000);
+            });
+        });
+
+        // تأثير التحويم على الكارت
+        const basicCard = document.querySelector('.basic-card');
+        if (basicCard) {
+            basicCard.addEventListener('mouseenter', () => {
+                basicCard.style.transform = 'translateY(-10px) scale(1.03)';
+            });
+
+            basicCard.addEventListener('mouseleave', () => {
+                basicCard.style.transform = 'translateY(0) scale(1)';
+            });
+        }
+    </script>
+}

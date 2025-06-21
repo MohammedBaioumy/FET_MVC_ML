@@ -1,0 +1,89 @@
+﻿<div aria-live="polite" aria-atomic="true" class="z-3 position-relative p-2 rounded-3">
+    <div class="toast-container position-absolute top-0 end-0 p-2">
+        <div class="toast fade show shadow @TempData["ToastColor"]" id="fadeOutToast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header fs-5 fw-semibold">
+                <i class="fa-solid fa-laptop-code me-1"></i>
+                <strong class="me-auto">FET</strong>
+                <small class="text-body-secondary">@TimeOnly.FromDateTime(DateTime.Now)</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body opacity-75 fs-6 fw-medium">
+                @TempData["Operation"]
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var toastEl = document.getElementById('fadeOutToast');
+        if (toastEl) {
+            // عرض الـ Toast أولاً
+            var toast = new bootstrap.Toast(toastEl, {
+                animation: true,
+                autohide: false // نعطّل الإخفاء التلقائي الافتراضي
+            });
+            toast.show();
+
+            // بدء تأثير التلاشي بعد 1 ثانية (يمكن تعديلها)
+            setTimeout(function() {
+                var opacity = 1;
+                var duration = 4000; // 4 ثواني
+                var interval = 50; // تحديث كل 50 مللي ثانية
+                var delta = interval / duration;
+
+                var fadeEffect = setInterval(function() {
+                    if (opacity <= 0.1) {
+                        clearInterval(fadeEffect);
+                        toast.hide(); // إخفاء الـ Toast نهائياً بعد التلاشي
+                        toastEl.remove(); // إزالة العنصر من DOM
+                    } else {
+                        opacity -= delta;
+                        toastEl.style.opacity = opacity;
+                    }
+                }, interval);
+            }, 1000); // بدء التلاشي بعد ثانية واحدة من الظهور
+        }
+    });
+</script>
+
+<style>
+    /* تحسينات التصميم للتأثير */
+    #fadeOutToast {
+        transition: opacity 0.5s ease;
+        opacity: 1; /* نبدأ بعرض كامل */
+    }
+
+    /* تخصيص ألوان الـ Toast */
+    .toast.bg-success {
+        background-color: #28a745 !important;
+    }
+
+    .toast.bg-danger {
+        background-color: #dc3545 !important;
+    }
+
+    .toast.bg-warning {
+        background-color: #ffc107 !important;
+        color: #212529;
+    }
+
+    .toast.bg-info {
+        background-color: #17a2b8 !important;
+    }
+
+    /* تحسينات الشكل */
+    .toast {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .toast-header {
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .toast.bg-warning .toast-header {
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+</style>

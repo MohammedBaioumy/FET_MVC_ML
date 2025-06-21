@@ -1,0 +1,288 @@
+﻿@using FET_MVCforTest.Data
+@inject AppDbContext _context;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Generated Timetable";
+}
+
+<style>
+    /* Main Container */
+    .main-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* Header Section */
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    /* Buttons */
+    .action-btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-back {
+        background: #f8fafc;
+        color: #4f46e5;
+        border: 2px solid #e0e7ff;
+    }
+
+    .btn-back:hover {
+        background: #4f46e5;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-regenerate {
+        background: linear-gradient(135deg, #10b981, #34d399);
+        color: white;
+        border: none;
+    }
+
+    .btn-regenerate:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Table Container */
+    .table-container {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    /* Feedback Section */
+    .feedback-section {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .feedback-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: #1e293b;
+    }
+
+    /* Articles Section */
+    .articles-section {
+        margin-bottom: 3rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: #1e293b;
+    }
+
+    .subject-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+    }
+
+    .subject-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .subject-name {
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+    }
+
+    .subject-scientific {
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    /* Dark Mode */
+    body.dark-mode .table-container,
+    body.dark-mode .feedback-section,
+    body.dark-mode .subject-card {
+        background: #2d2d2d;
+        color: #e2e8f0;
+    }
+
+    body.dark-mode .subject-name {
+        color: #f8fafc;
+    }
+
+    body.dark-mode .subject-scientific {
+        color: #94a3b8;
+    }
+
+    /* Animations */
+    .animate-fade-in {
+        animation: fadeIn 0.6s ease-out forwards;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    /* Modern Button Style */
+    .modern-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 32px;
+        background: linear-gradient(135deg, #6e8efb, #a777e3);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+        .modern-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+
+        .modern-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .modern-btn:hover::before {
+            left: 100%;
+        }
+
+        .modern-btn svg {
+            transition: transform 0.3s ease;
+        }
+
+        .modern-btn:hover svg {
+            transform: translateX(5px);
+        }
+
+    /* Dark Mode Styles */
+    body.dark-mode .modern-btn {
+        background: linear-gradient(135deg, #4b6cb7, #182848);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+</style>
+
+<div class="main-container">
+    <!-- Header Section -->
+    <div class="header-section">
+        <h1 class="section-title">AI Generated Timetable</h1>
+        <div class="action-buttons">
+            <a href="@Url.Action("Index", "Home")" class="action-btn btn-back">
+                <i class="bi bi-arrow-left-circle me-2"></i>
+                Back to Dashboard
+            </a>
+            <a href="@Url.Action("Loading", "Gemini")" class="action-btn btn-regenerate ms-3">
+                <i class="bi bi-arrow-repeat me-2"></i>
+                Regenerate
+            </a>
+        </div>
+    </div>
+
+    <!-- Timetable Section -->
+    <div class="table-container animate-fade-in">
+        @Html.Raw(ViewBag.ScheduleTable)
+    </div>
+
+    <!-- Feedback Section -->
+    <div class="feedback-section animate-fade-in">
+        <h3 class="feedback-title">Help us improve the timetable</h3>
+        <form asp-action="SendFeedback" asp-controller="Gemini" method="post">
+            <div class="mb-3">
+                <label for="feedback" class="form-label">Your Feedback</label>
+                <textarea class="form-control" id="feedback" name="feedback" rows="4" required></textarea>
+                <div class="form-text">Share your suggestions or report issues</div>
+            </div>
+            <input type="hidden" name="currentTableHtml" value="@Html.Raw(System.Net.WebUtility.HtmlEncode(ViewBag.ScheduleTable))" />
+            <button type="submit" class="action-btn btn-regenerate">
+                <i class="bi bi-send-fill me-2"></i>Submit Feedback
+            </button>
+        </form>
+    </div>
+
+    <!-- Articles Section -->
+    <!-- بعد قسم Feedback مباشرة -->
+    <div class="text-center mt-5 animate-fade-in">
+        <a href="@Url.Action("SubjectArticles", "Gemini")" class="modern-btn">
+            <span>Explore Subject Articles</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </a>
+    </div>
+
+    
+</div>
+
+@section Scripts {
+    <script>
+        // Character counter for feedback
+        const feedbackTextarea = document.getElementById('feedback');
+        const charCounter = document.createElement('small');
+        charCounter.className = 'text-muted d-block text-end';
+        charCounter.textContent = '0/500 characters';
+        feedbackTextarea.parentNode.appendChild(charCounter);
+
+        feedbackTextarea.addEventListener('input', function() {
+            const currentLength = this.value.length;
+            charCounter.textContent = `${currentLength}/500 characters`;
+            
+            if (currentLength > 500) {
+                charCounter.classList.add('text-danger');
+            } else {
+                charCounter.classList.remove('text-danger');
+            }
+        });
+
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+}

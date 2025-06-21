@@ -1,0 +1,159 @@
+﻿@{
+    ViewBag.Title = "Groups List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Student Groups";
+}
+
+@model IEnumerable<StudentsGroupViewModel>
+
+<div class="container py-5 animate__animated animate__fadeIn">
+    @if (TempData["Operation"] != null)
+    {
+        <partial name="View"></partial>
+    }
+
+    <h1 class="text-center fw-bold mb-5">
+        <i class="bi bi-people-fill me-2"></i>Student Groups Management
+    </h1>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger animate__animated animate__shakeX">@TempData["Error"]</div>
+    }
+
+    <!-- Header with Responsive Layout -->
+    <div class="row mb-5">
+        <div class="col-md-3 mb-2 mb-md-0">
+            <a href="@Url.Action("Index", "Home")" class="btn btn-secondary w-100">
+                <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+            </a>
+        </div>
+        <div class="col-md-6 mb-2 mb-md-0">
+            <div class="input-group">
+                <input type="text" id="groupSearch" class="form-control" placeholder="Search by group name..." />
+                <span class="input-group-text">
+                    <i class="bi bi-search"></i>
+                </span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <a href="@Url.Action("Create")" class="btn btn-primary w-100 animate__animated animate__pulse">
+                <i class="bi bi-plus-circle me-1"></i> Add New Group
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var group in Model.ToList())
+        {
+            <div class="col-sm-6 col-md-4 col-lg-3 group-item animate__animated animate__fadeInUp" style="animation-delay: @(Model.ToList().IndexOf(group) * 0.1 + "s")">
+                <div class="card text-center shadow-sm border-0 rounded-4 p-3 position-relative group-card">
+                    <i class="bi bi-people fs-2 text-primary mb-3"></i>
+                    <h3 class="card-title mb-3">@group.Name</h3>
+                    <div class="group-details">
+                        <p class="fw-semibold text-primary">
+                            <i class="bi bi-person-fill me-1"></i> Students: @(group.NumberOfStudents?.ToString() ?? "Not specified")
+                        </p>
+                    </div>
+
+                    <div class="d-flex justify-content-center mt-4">
+                        <a href="@Url.Action("Edit", new { id = group.Id })" class="btn btn-warning rounded-pill me-2">
+                            <i class="bi bi-pencil-square me-1"></i> Edit
+                        </a>
+                        <button type="button" class="btn btn-danger rounded-pill" data-bs-toggle="modal" data-bs-target="#DeleteModal-@group.Id">
+                            <i class="bi bi-trash me-1"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete Modal -->
+            <div class="modal fade" id="DeleteModal-@group.Id" tabindex="-1" aria-labelledby="DeleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content rounded-3">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+                                Confirm Group Deletion
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete the following student group?</p>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <h5 class="fw-bold">@group.Name</h5>
+                                <p class="mb-1"><strong>Students:</strong> @(group.NumberOfStudents?.ToString() ?? "Not specified")</p>
+                                <p class="text-danger mb-0"><i class="bi bi-exclamation-circle-fill me-1"></i>This will delete all associated data!</p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="bi bi-x-circle me-1"></i> Cancel
+                            </button>
+                            <form asp-action="Delete" asp-route-id="@group.Id" method="post">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="bi bi-trash-fill me-1"></i> Confirm Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Custom CSS -->
+    <style>
+        .group-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+
+            .group-card:hover {
+                transform: translateY(-10px) scale(1.03);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            }
+
+        .group-details {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        body.dark-mode .group-details {
+            background-color: #2d2d2d;
+        }
+    </style>
+</div>
+
+@section Scripts {
+    <script>
+        // Search functionality
+        const searchInput = document.getElementById('groupSearch');
+        const groupItems = document.querySelectorAll('.group-item');
+
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.toLowerCase();
+
+            groupItems.forEach(item => {
+                const title = item.querySelector('.card-title').textContent.toLowerCase();
+                if (title.includes(searchTerm)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Card hover effect
+        document.querySelectorAll('.group-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-10px) scale(1.03)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+    </script>
+}

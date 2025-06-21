@@ -1,0 +1,449 @@
+﻿@{
+    ViewBag.Title = "Import Excel - FET";
+}
+
+<style>
+    :root {
+        --primary-blue: #3498db;
+        --dark-blue: #2c3e50;
+        --success-green: #2ecc71;
+    }
+
+    .welcome-section {
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .import-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transform: translateY(20px);
+        opacity: 0;
+        animation: fadeInUp 0.8s forwards 0.3s;
+    }
+
+    .welcome-logo {
+        font-size: 4.5rem;
+        color: var(--dark-blue);
+        margin-bottom: 1.5rem;
+        display: inline-block;
+    }
+
+    h1.welcome-title {
+        color: var(--dark-blue);
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        font-size: 2.5rem;
+    }
+
+    .welcome-description {
+        font-size: 1.2rem;
+        color: #555;
+        margin-bottom: 2.5rem;
+        line-height: 1.6;
+    }
+
+    .file-upload-wrapper {
+        position: relative;
+        margin: 2rem 0;
+    }
+
+    .file-upload-label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 2rem;
+        border: 3px dashed #ddd;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .file-upload-label:hover {
+            border-color: var(--primary-blue);
+            background: rgba(52, 152, 219, 0.05);
+        }
+
+        .file-upload-label i {
+            font-size: 3rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .file-upload-label h3 {
+            margin: 0;
+            color: var(--dark-blue);
+        }
+
+        .file-upload-label p {
+            margin: 0.5rem 0 0;
+            color: #777;
+        }
+
+    .file-upload-input {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    .file-info {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 5px;
+        display: none;
+    }
+
+    .progress-bar {
+        height: 10px;
+        background: #e9ecef;
+        border-radius: 5px;
+        margin-top: 1rem;
+        overflow: hidden;
+        display: none;
+    }
+
+    .progress {
+        height: 100%;
+        background: var(--success-green);
+        width: 0%;
+        transition: width 0.3s ease;
+    }
+
+    .btn-import {
+        background-color: var(--success-green);
+        color: white;
+        padding: 12px 35px;
+        font-size: 1.1rem;
+        border-radius: 50px;
+        border: none;
+        transition: all 0.4s ease;
+        box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+        position: relative;
+        overflow: hidden;
+        margin-top: 1.5rem;
+        display: none;
+    }
+
+        .btn-import:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.6);
+            background-color: #27ae60;
+        }
+
+    /* File drop animation */
+    .file-upload-label.drag-over {
+        animation: pulseBorder 1.5s infinite;
+        border-color: var(--success-green);
+        background: rgba(46, 204, 113, 0.05);
+    }
+
+    @@keyframes pulseBorder {
+        0% {
+            border-color: var(--success-green);
+        }
+
+        50% {
+            border-color: var(--primary-blue);
+        }
+
+        100% {
+            border-color: var(--success-green);
+        }
+    }
+
+    /* Success animation */
+    .success-animation {
+        display: none;
+    }
+
+    .checkmark {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto;
+    }
+
+    .checkmark__circle {
+        stroke-dasharray: 166;
+        stroke-dashoffset: 166;
+        stroke-width: 2;
+        stroke-miterlimit: 10;
+        stroke: var(--success-green);
+        fill: none;
+        animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    }
+
+    .checkmark__check {
+        transform-origin: 50% 50%;
+        stroke-dasharray: 48;
+        stroke-dashoffset: 48;
+        stroke: var(--success-green);
+        animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+    }
+
+    @@keyframes stroke {
+        100% {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .bg-icon {
+        position: absolute;
+        font-size: 20rem;
+        opacity: 0.05;
+        z-index: 1;
+    }
+
+    .bg-icon-1 {
+        top: -50px;
+        left: -50px;
+        animation: float 6s ease-in-out infinite;
+        color: #2ecc71;
+    }
+
+    .bg-icon-2 {
+        bottom: -50px;
+        right: -50px;
+        animation: float 8s ease-in-out infinite 1s;
+        color: #3498db;
+    }
+
+    @@keyframes float {
+        0% {
+            transform: translateY(0) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-20px) rotate(5deg);
+        }
+
+        100% {
+            transform: translateY(0) rotate(0deg);
+        }
+    }
+
+    /* Dark Mode Support */
+    body.dark-mode .welcome-section {
+        background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+    }
+
+    body.dark-mode .import-container {
+        background-color: rgba(30, 30, 30, 0.95);
+    }
+
+    body.dark-mode .welcome-title,
+    body.dark-mode .welcome-logo {
+        color: #e0e0e0;
+    }
+
+    body.dark-mode .welcome-description {
+        color: #b0b0b0;
+    }
+
+    body.dark-mode .file-upload-label h3 {
+        color: #e0e0e0;
+    }
+
+    body.dark-mode .file-upload-label {
+        border-color: #444;
+        background-color: rgba(50, 50, 50, 0.5);
+    }
+
+    body.dark-mode .file-info {
+        background-color: #252525;
+    }
+</style>
+
+<div class="welcome-section">
+    <i class="bi bi-file-excel bg-icon bg-icon-1"></i>
+    <i class="bi bi-cloud-arrow-up bg-icon bg-icon-2"></i>
+
+    <div class="import-container">
+        <div class="welcome-logo">
+            <i class="bi bi-file-earmark-excel"></i>
+        </div>
+        <h1 class="welcome-title">Import Timetable Data</h1>
+        <p class="welcome-description">
+            Upload your Excel file to generate a weekly schedule table
+        </p>
+
+        <form id="excelForm" method="post" enctype="multipart/form-data" asp-action="GenerateFromExcel">
+            <div class="file-upload-wrapper">
+                <label for="excelFile" class="file-upload-label" id="drop-area">
+                    <i class="bi bi-cloud-arrow-up-fill"></i>
+                    <h3>Drag & Drop your file here</h3>
+                    <p>or click to browse files</p>
+                    <p><small>Supported formats: .xlsx, .xls, .csv</small></p>
+                    <input type="file" id="excelFile" name="excelFile" class="file-upload-input" accept=".xlsx,.xls,.csv" required>
+                </label>
+            </div>
+
+            <div class="file-info" id="file-info">
+                <i class="bi bi-file-earmark-excel"></i>
+                <span id="file-name"></span>
+                <span id="file-size"></span>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress" id="progress-bar"></div>
+            </div>
+
+            <button type="submit" class="btn-import" id="upload-btn">
+                <i class="bi bi-upload"></i> Generate Schedule
+            </button>
+
+            <div class="success-animation" id="success-animation">
+                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+                    <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                </svg>
+                <h3>Processing Your File...</h3>
+                <p>Please wait while we generate your schedule.</p>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropArea = document.getElementById('drop-area');
+            const fileInput = document.getElementById('excelFile');
+            const fileInfo = document.getElementById('file-info');
+            const fileName = document.getElementById('file-name');
+            const fileSize = document.getElementById('file-size');
+            const progressBar = document.querySelector('.progress-bar');
+            const progress = document.getElementById('progress-bar');
+            const uploadBtn = document.getElementById('upload-btn');
+            const successAnimation = document.getElementById('success-animation');
+            const excelForm = document.getElementById('excelForm');
+
+            // Prevent default drag behaviors
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false);
+            });
+
+            // Highlight drop area when item is dragged over it
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            // Handle dropped files
+            dropArea.addEventListener('drop', handleDrop, false);
+
+            // Handle selected files
+            fileInput.addEventListener('change', handleFiles, false);
+
+            // Form submission
+            excelForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    alert('Please select a file first');
+                    return;
+                }
+
+                // Show progress and processing animation
+                progressBar.style.display = 'block';
+                uploadBtn.style.display = 'none';
+                fileInfo.style.display = 'none';
+                successAnimation.style.display = 'block';
+
+                // Simulate progress (in real app, this would be actual upload progress)
+                let progressValue = 0;
+                const interval = setInterval(() => {
+                    progressValue += Math.random() * 10;
+                    if (progressValue >= 100) {
+                        progressValue = 100;
+                        clearInterval(interval);
+                        // Submit the form when progress completes
+                        setTimeout(() => {
+                            excelForm.submit();
+                        }, 500);
+                    }
+                    progress.style.width = progressValue + '%';
+                }, 200);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            function highlight() {
+                dropArea.classList.add('drag-over');
+            }
+
+            function unhighlight() {
+                dropArea.classList.remove('drag-over');
+            }
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                fileInput.files = files;
+                handleFiles();
+            }
+
+            function handleFiles() {
+                const files = fileInput.files;
+                if (files.length > 0) {
+                    const file = files[0];
+
+                    // Display file info
+                    fileName.textContent = file.name;
+                    fileSize.textContent = formatFileSize(file.size);
+                    fileInfo.style.display = 'block';
+
+                    // Show upload button
+                    uploadBtn.style.display = 'inline-block';
+
+                    // Hide success animation if shown
+                    successAnimation.style.display = 'none';
+                }
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+        });
+    </script>
+}
