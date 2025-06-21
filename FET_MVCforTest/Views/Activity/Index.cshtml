@@ -7,123 +7,254 @@
 @model IEnumerable<UpdateActivityViewModel>
 
 <style>
-    /* أنماط أساسية متوافقة مع الـ Dashboard */
-    :root {
-        --primary-blue: #0d6efd;
-        --primary-blue-dark: #4dabf7;
-        --danger: #dc3545;
-        --danger-dark: #ff6b6b;
-        --warning: #ffc107;
-        --warning-dark: #ffd43b;
-        --success: #28a745;
-        --success-dark: #40c057;
+    .activities-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 20px;
     }
 
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f8f9fa;
-        color: #212529;
+    .page-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .page-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #5a7df5, #8e5ee0);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .activities-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .activity-card {
+        background: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
+        height: 100%;
+        border: 1px solid #f0f0f0;
+        position: relative;
+        z-index: 1;
+        transform: translateZ(0);
     }
 
-        body.dark-mode {
-            background-color: #1a1a1a;
-            color: #e0e0e0;
+        .activity-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            z-index: 10;
         }
 
-    /* تحسينات للكروت */
-    .activity-card {
-        position: relative;
-        background-color: #ffffff;
-        border-radius: 1rem;
+        .activity-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .activity-card:hover::before {
+            opacity: 1;
+        }
+
+    .card-header {
         padding: 1.5rem;
+        background: linear-gradient(135deg, #5a7df5, #8e5ee0);
+        color: white;
         text-align: center;
-        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-        overflow: hidden;
-        border: none;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        margin-bottom: 1.5rem;
-        height: 100%;
-        z-index: 1;
     }
 
-    body.dark-mode .activity-card {
-        background-color: #242424;
-        border: 1px solid #3a3a3a;
-        box-shadow: 0 4px 18px rgba(255, 255, 255, 0.05);
+    .activity-name {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+        color: #ffffff;
     }
 
-    .activity-card:hover {
-        transform: translateY(-10px) scale(1.03);
-        box-shadow: 0 8px 25px rgba(13, 110, 253, 0.25);
+    .card-body {
+        padding: 1.5rem;
+        background: #fafafa;
     }
 
-    body.dark-mode .activity-card:hover {
-        box-shadow: 0 8px 25px rgba(77, 171, 247, 0.35);
+    .activity-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
     }
 
-    .activity-icon {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-        color: var(--primary-blue);
-        transition: all 0.3s ease;
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #444;
     }
 
-    body.dark-mode .activity-icon {
-        color: var(--primary-blue-dark);
+    .card-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid #eaeaea;
+        text-align: center;
+        background: #f8f8f8;
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
     }
 
-    .activity-card:hover .activity-icon {
-        transform: scale(1.2);
-    }
-
-    /* تحسينات للأزرار */
-    .btn-activity {
+    .action-btn {
+        padding: 0.5rem 1rem;
         border-radius: 50px;
-        padding: 8px 20px;
-        font-weight: 500;
+        font-weight: 600;
         transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .edit-btn {
+        background: transparent;
+        border: 2px solid #5a7df5;
+        color: #5a7df5;
+    }
+
+        .edit-btn:hover {
+            background: #5a7df5;
+            color: white;
+        }
+
+    .delete-btn {
+        background: transparent;
+        border: 2px solid #e74c3c;
+        color: #e74c3c;
+    }
+
+        .delete-btn:hover {
+            background: #e74c3c;
+            color: white;
+        }
+
+    /* Dark Mode */
+    body.dark-mode .activity-card {
+        background: #2d3748;
+        border-color: #374151;
+    }
+
+    body.dark-mode .card-header {
+        background: linear-gradient(135deg, #4b6cb7, #182848);
+    }
+
+    body.dark-mode .card-body {
+        background: #1f2937;
+    }
+
+        body.dark-mode .card-body .detail-item {
+            color: #e5e7eb;
+        }
+
+    body.dark-mode .card-footer {
+        border-top: 1px solid #4a5568;
+        background: #1a202c;
+    }
+
+    body.dark-mode .activity-card::before {
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Search and Back to Top */
+    .search-container {
+        max-width: 600px;
+        margin: 0 auto 2rem;
         position: relative;
-        overflow: hidden;
     }
 
-    .btn-edit {
-        background-color: var(--warning);
-        border-color: var(--warning);
+    .search-input {
+        width: 100%;
+        padding: 12px 20px;
+        padding-left: 45px;
+        border-radius: 50px;
+        border: 2px solid #e0e0e0;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        background: #ffffff;
     }
 
-    body.dark-mode .btn-edit {
-        background-color: var(--warning-dark);
-        border-color: var(--warning-dark);
+        .search-input:focus {
+            border-color: #5a7df5;
+            box-shadow: 0 4px 15px rgba(90, 125, 245, 0.25);
+            outline: none;
+        }
+
+    .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
     }
 
-    .btn-delete {
-        background-color: var(--danger);
-        border-color: var(--danger);
+    .back-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #5a7df5, #8e5ee0);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 99;
+        opacity: 0;
+        visibility: hidden;
     }
 
-    body.dark-mode .btn-delete {
-        background-color: var(--danger-dark);
-        border-color: var(--danger-dark);
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+    .back-btn-container {
+        margin-bottom: 2rem;
     }
 
-    .btn-back {
-        background-color: #6c757d;
-        border-color: #6c757d;
+    body.dark-mode .search-input {
+        background: #2d3748;
+        border-color: #4a5568;
+        color: #e2e8f0;
     }
 
-    .btn-add {
-        background-color: var(--primary-blue);
-        border-color: var(--primary-blue);
-        animation: pulse 2s infinite;
+    body.dark-mode .search-icon {
+        color: #a0aec0;
     }
 
-    body.dark-mode .btn-add {
-        background-color: var(--primary-blue-dark);
-        border-color: var(--primary-blue-dark);
+    body.dark-mode .back-to-top {
+        background: linear-gradient(135deg, #4b6cb7, #182848);
     }
 
-    /* تأثيرات حركية */
+    /* Animations */
     @@keyframes fadeIn {
         from {
             opacity: 0;
@@ -136,279 +267,100 @@
         }
     }
 
-    @@keyframes pulse {
-        0% {
-            transform: scale(1);
-            box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
+    .animate-card {
+        animation: fadeIn 0.5s ease-out forwards;
+        opacity: 0;
+    }
+
+        .animate-card:nth-child(1) {
+            animation-delay: 0.1s;
         }
 
-        70% {
-            transform: scale(1.05);
-            box-shadow: 0 0 0 10px rgba(13, 110, 253, 0);
+        .animate-card:nth-child(2) {
+            animation-delay: 0.2s;
         }
 
-        100% {
-            transform: scale(1);
-            box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
-        }
-    }
-
-    @@keyframes ripple {
-        0% {
-            transform: scale(0);
-            opacity: 1;
+        .animate-card:nth-child(3) {
+            animation-delay: 0.3s;
         }
 
-        100% {
-            transform: scale(4);
-            opacity: 0;
-        }
-    }
-
-    .btn-ripple {
-        position: relative;
-        overflow: hidden;
-    }
-
-        .btn-ripple:after {
-            content: "";
-            display: block;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
-            background-repeat: no-repeat;
-            background-position: 50%;
-            transform: scale(10, 10);
-            opacity: 0;
-            transition: transform .5s, opacity 1s;
+        .animate-card:nth-child(4) {
+            animation-delay: 0.4s;
         }
 
-        .btn-ripple:active:after {
-            transform: scale(0, 0);
-            opacity: .3;
-            transition: 0s;
+        .animate-card:nth-child(5) {
+            animation-delay: 0.5s;
         }
-
-    /* تحسينات للعنوان */
-    .page-title {
-        font-weight: 700;
-        margin-bottom: 2rem;
-        position: relative;
-        display: inline-block;
-    }
-
-        .page-title:after {
-            content: '';
-            position: absolute;
-            width: 50%;
-            height: 4px;
-            background: var(--primary-blue);
-            bottom: -10px;
-            left: 25%;
-            border-radius: 2px;
-        }
-
-    body.dark-mode .page-title:after {
-        background: var(--primary-blue-dark);
-    }
-
-    /* تأثيرات إضافية للكروت */
-    .activity-card::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 5px;
-        background: var(--card-accent);
-        transition: all 0.3s ease;
-    }
-
-    body.dark-mode .activity-card::after {
-        height: 8px;
-        box-shadow: 0 0 15px var(--card-accent);
-    }
-
-    /* ألوان مختلفة لكل كارت */
-    .activity-card:nth-child(1) {
-        --card-accent: #3498db;
-    }
-
-    .activity-card:nth-child(2) {
-        --card-accent: #2ecc71;
-    }
-
-    .activity-card:nth-child(3) {
-        --card-accent: #e74c3c;
-    }
-
-    .activity-card:nth-child(4) {
-        --card-accent: #f39c12;
-    }
-
-    .activity-card:nth-child(5) {
-        --card-accent: #9b59b6;
-    }
-
-    .activity-card:nth-child(6) {
-        --card-accent: #1abc9c;
-    }
-
-    /* تأثير التوهج في الدارك مود */
-    @@keyframes glow {
-        0% {
-            box-shadow: 0 0 5px var(--card-accent);
-        }
-
-        50% {
-            box-shadow: 0 0 20px var(--card-accent);
-        }
-
-        100% {
-            box-shadow: 0 0 5px var(--card-accent);
-        }
-    }
-
-    body.dark-mode .activity-card:hover {
-        animation: glow 2s infinite;
-    }
-
-    /* تحسينات لـ Modal */
-    .modal-content {
-        border-radius: 12px;
-        overflow: hidden;
-        border: none;
-    }
-
-    body.dark-mode .modal-content {
-        background-color: #2d2d2d;
-        border: 1px solid #444;
-    }
-
-    .modal-header {
-        border-bottom: 1px solid rgba(0,0,0,0.1);
-    }
-
-    body.dark-mode .modal-header {
-        background-color: #1a1a1a;
-        border-bottom: 1px solid #444;
-    }
-
-    .modal-footer {
-        border-top: 1px solid rgba(0,0,0,0.1);
-    }
-
-    body.dark-mode .modal-footer {
-        border-top: 1px solid #444;
-    }
-
-    .modal-title {
-        color: inherit;
-    }
-
-    body.dark-mode .modal-title {
-        color: #f8f9fa;
-    }
-
-    .delete-confirmation {
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        padding: 15px;
-        margin: 15px 0;
-    }
-
-    body.dark-mode .delete-confirmation {
-        background-color: #333;
-    }
-
-    .activity-details {
-        text-align: left;
-        margin-top: 1rem;
-    }
-
-    .activity-detail-item {
-        margin-bottom: 0.5rem;
-    }
-
-    .activity-detail-label {
-        font-weight: 600;
-        color: var(--primary-blue);
-    }
-
-    body.dark-mode .activity-detail-label {
-        color: var(--primary-blue-dark);
-    }
 </style>
 
-<div class="container py-5 animate__animated animate__fadeIn">
-    <h1 class="text-center page-title mb-5">
-        <i class="bi bi-calendar-event me-2"></i>Activities Management
-    </h1>
+<div class="activities-container">
+    <div class="back-btn-container">
+        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <div class="page-header">
+        <h1 class="page-title">Activities Management</h1>
+        <p class="text-muted">Manage all teaching activities and schedules</p>
+    </div>
+
+    <div class="search-container">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search by teacher or subject...">
+    </div>
+
+    <div class="d-flex justify-content-center mb-4">
+        <a href="@Url.Action("Create")" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i> Add New Activity
+        </a>
+    </div>
 
     @if (TempData["Error"] != null)
     {
         <div class="alert alert-danger animate__animated animate__shakeX">@TempData["Error"]</div>
     }
 
-    <div class="d-flex justify-content-between mb-4">
-        <a href="@Url.Action("Index", "Home")" class="btn btn-back btn-ripple">
-            <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
-        </a>
-        <a href="@Url.Action("Create")" class="btn btn-add btn-ripple">
-            <i class="bi bi-plus-circle me-1"></i> Add New Activity
-        </a>
-    </div>
-
-    <div class="row g-4">
-        @foreach (var activity in Model.ToList())
+    <div class="activities-grid" id="activitiesGrid">
+        @foreach (var activity in Model)
         {
-            <div class="col-md-4 animate__animated animate__fadeInUp" style="animation-delay: @(Model.ToList().IndexOf(activity) * 0.1+'s')">
-                <div class="activity-card">
-                    <i class="bi bi-calendar-event activity-icon"></i>
-                    <h3 class="card-title mb-2">@activity.TeacherName</h3>
-                    <p class="text-muted mb-3">@activity.SubjectName</p>
-
+            <div class="activity-card animate-card" data-name="@activity.TeacherName.ToLower()" data-subject="@activity.SubjectName.ToLower()">
+                <div class="card-header">
+                    <h3 class="activity-name">@activity.TeacherName</h3>
+                    <p>@activity.SubjectName</p>
+                </div>
+                <div class="card-body">
                     <div class="activity-details">
-                        <div class="activity-detail-item">
-                            <span class="activity-detail-label">Group:</span> @activity.StudentsGroupName
+                        <div class="detail-item">
+                            <i class="bi bi-people"></i>
+                            <span>Group: @activity.StudentsGroupName</span>
                         </div>
-                        <div class="activity-detail-item">
-                            <span class="activity-detail-label">Duration:</span> @activity.Duration min
+                        <div class="detail-item">
+                            <i class="bi bi-clock"></i>
+                            <span>Duration: @activity.Duration min</span>
                         </div>
-                       
-                            <div class="activity-detail-item">
-                            <span class="activity-detail-label">Number of sessions:</span> @activity.NumOfSessionsPerWeek
-                            </div>
-                        
+                        <div class="detail-item">
+                            <i class="bi bi-calendar-week"></i>
+                            <span>Sessions: @activity.NumOfSessionsPerWeek/week</span>
+                        </div>
                     </div>
-                    
-                    <div class="d-flex justify-content-center mt-4">
-                        <a href="@Url.Action("Edit", new { id = activity.Id })"
-                           class="btn btn-edit btn-activity btn-ripple me-2">
-                            <i class="bi bi-pencil-square me-1"></i> Edit
-                        </a>
-
-                        <button type="button"
-                                class="btn btn-delete btn-activity btn-ripple"
-                                data-id="@activity.Id"
-                                data-bs-toggle="modal"
-                                data-bs-target="#DeleteModal-@activity.Id">
-                            <i class="bi bi-trash me-1"></i> Delete
-                        </button>
-                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="@Url.Action("Edit", new { id = activity.Id })" class="action-btn edit-btn">
+                        <i class="bi bi-pencil"></i> Edit
+                    </a>
+                    <button type="button" class="action-btn delete-btn" data-bs-toggle="modal" data-bs-target="#DeleteModal-@activity.Id">
+                        <i class="bi bi-trash"></i> Delete
+                    </button>
                 </div>
             </div>
 
-            <!-- Modal محسنة -->
+            <!-- Delete Modal -->
             <div class="modal fade" id="DeleteModal-@activity.Id" tabindex="-1" aria-labelledby="DeleteModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
+                    <div class="modal-content rounded-3">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="DeleteModalLabel">
+                            <h5 class="modal-title">
                                 <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
                                 Confirm Activity Deletion
                             </h5>
@@ -416,11 +368,11 @@
                         </div>
                         <div class="modal-body">
                             <p>Are you sure you want to delete the following activity?</p>
-                            <div class="delete-confirmation">
-                                <h5><strong>@activity.TeacherName - @activity.SubjectName</strong></h5>
+                            <div class="bg-light p-3 rounded mb-3">
+                                <h5 class="fw-bold">@activity.TeacherName - @activity.SubjectName</h5>
                                 <p class="mb-1"><strong>Group:</strong> @activity.StudentsGroupName</p>
                                 <p class="mb-1"><strong>Duration:</strong> @activity.Duration min</p>
-                                <p class="mb-1"><strong>Number Of Sessions:</strong> @activity.NumOfSessionsPerWeek</p>
+                                <p class="mb-1"><strong>Sessions:</strong> @activity.NumOfSessionsPerWeek/week</p>
                                 <p class="text-danger mb-0"><i class="bi bi-exclamation-circle-fill me-1"></i>This action cannot be undone!</p>
                             </div>
                         </div>
@@ -441,33 +393,46 @@
     </div>
 </div>
 
+<div class="back-to-top" id="backToTop">
+    <i class="bi bi-arrow-up"></i>
+</div>
+
 @section Scripts {
     <script>
-        // تأثير الريبل للأزرار
-        document.querySelectorAll('.btn-ripple').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                let x = e.clientX - e.target.getBoundingClientRect().left;
-                let y = e.clientY - e.target.getBoundingClientRect().top;
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const activityCards = document.querySelectorAll('.activity-card');
 
-                let ripples = document.createElement('span');
-                ripples.style.left = x + 'px';
-                ripples.style.top = y + 'px';
-                this.appendChild(ripples);
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
 
-                setTimeout(() => {
-                    ripples.remove();
-                }, 1000);
+            activityCards.forEach(card => {
+                const name = card.getAttribute('data-name');
+                const subject = card.getAttribute('data-subject');
+
+                if (name.includes(searchTerm) || subject.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
             });
         });
 
-        // تأثير التحويم على الكروت
-        document.querySelectorAll('.activity-card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.transform = 'translateY(-10px) scale(1.03)';
-            });
+        // Back to top button
+        const backToTop = document.getElementById('backToTop');
 
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'translateY(0) scale(1)';
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        backToTop.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
             });
         });
     </script>

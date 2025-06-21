@@ -23,8 +23,13 @@
                     <a class="nav-link" asp-controller="Home" asp-action="Index">
                         <i class="bi bi-grid me-1"></i>Dashboard
                     </a>
-                </li>                
-              
+                </li>     
+                <li class="nav-item @(currentPath.EndsWith("/SubjectArticles") ? "active" : "")">
+                    <a class="nav-link" asp-controller="Gemini" asp-action="SubjectArticles">
+                        <i class="bi bi-grid me-1"></i>Scientific Articles
+                    </a>
+                </li>
+
                 @* <li class="nav-item @(currentPath.Contains("/subject") ? "active" : "")"> *@
                 @*     <a class="nav-link" asp-controller="Subject" asp-action="Index"> *@
                 @*         <i class="bi bi-building me-1"></i>Subjects *@

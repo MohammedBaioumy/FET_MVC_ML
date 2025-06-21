@@ -92,7 +92,7 @@ namespace FET_MVCforTest.Controllers
 						ModelState.AddModelError(string.Empty, "This account is locked");
 
 					if (result.Succeeded)
-						return RedirectToAction(nameof(HomeController.Index), "Home");
+						return RedirectToAction(nameof(HomeController.Welcome), "Home");
 
 				}
 			}

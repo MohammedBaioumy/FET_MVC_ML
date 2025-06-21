@@ -6,67 +6,354 @@
 
 @model IEnumerable<TeacherViewModel>
 
-<div class="container py-5 animate__animated animate__fadeIn">
+<style>
+    .teachers-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 20px;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .page-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #5a7df5, #8e5ee0);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .teachers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .teacher-card {
+        background: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+        border: 1px solid #f0f0f0;
+        position: relative;
+        z-index: 1;
+        transform: translateZ(0); /* Improve performance */
+    }
+
+        .teacher-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            z-index: 10;
+        }
+
+        /* Enhanced shadow effect for both light and dark modes */
+        .teacher-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .teacher-card:hover::before {
+            opacity: 1;
+        }
+
+    .card-header {
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #5a7df5, #8e5ee0);
+        color: white;
+        text-align: center;
+    }
+
+    .teacher-name {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+        color: #ffffff;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+        background: #fafafa;
+    }
+
+    .teacher-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #444;
+    }
+
+    .card-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid #eaeaea;
+        text-align: center;
+        background: #f8f8f8;
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .action-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .edit-btn {
+        background: transparent;
+        border: 2px solid #5a7df5;
+        color: #5a7df5;
+    }
+
+        .edit-btn:hover {
+            background: #5a7df5;
+            color: white;
+        }
+
+    .delete-btn {
+        background: transparent;
+        border: 2px solid #e74c3c;
+        color: #e74c3c;
+    }
+
+        .delete-btn:hover {
+            background: #e74c3c;
+            color: white;
+        }
+
+    /* Dark Mode */
+    body.dark-mode .teacher-card {
+        background: #2d3748;
+        border-color: #374151;
+    }
+
+    body.dark-mode .card-header {
+        background: linear-gradient(135deg, #4b6cb7, #182848);
+    }
+
+    body.dark-mode .card-body {
+        background: #1f2937;
+    }
+
+        body.dark-mode .card-body .detail-item {
+            color: #e5e7eb;
+        }
+
+    body.dark-mode .card-footer {
+        border-top: 1px solid #4a5568;
+        background: #1a202c;
+    }
+
+    /* Enhanced shadow for dark mode */
+    body.dark-mode .teacher-card::before {
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Search and Back to Top */
+    .search-container {
+        max-width: 600px;
+        margin: 0 auto 2rem;
+        position: relative;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 12px 20px;
+        padding-left: 45px;
+        border-radius: 50px;
+        border: 2px solid #e0e0e0;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        background: #ffffff;
+    }
+
+        .search-input:focus {
+            border-color: #5a7df5;
+            box-shadow: 0 4px 15px rgba(90, 125, 245, 0.25);
+            outline: none;
+        }
+
+    .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+    }
+
+    .back-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #5a7df5, #8e5ee0);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 99;
+        opacity: 0;
+        visibility: hidden;
+    }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+    .back-btn-container {
+        margin-bottom: 2rem;
+    }
+
+    body.dark-mode .search-input {
+        background: #2d3748;
+        border-color: #4a5568;
+        color: #e2e8f0;
+    }
+
+    body.dark-mode .search-icon {
+        color: #a0aec0;
+    }
+
+    body.dark-mode .back-to-top {
+        background: linear-gradient(135deg, #4b6cb7, #182848);
+    }
+
+    /* Animations */
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-card {
+        animation: fadeIn 0.5s ease-out forwards;
+        opacity: 0;
+    }
+
+        .animate-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .animate-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .animate-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .animate-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .animate-card:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+</style>
+
+<div class="teachers-container">
+    <div class="back-btn-container">
+        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <div class="page-header">
+        <h1 class="page-title">Teachers Management</h1>
+        <p class="text-muted">Manage all teachers and their working hours</p>
+    </div>
+
+    <div class="search-container">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search by teacher name...">
+    </div>
+
+    <div class="d-flex justify-content-center mb-4">
+        <a href="@Url.Action("Create")" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i> Add New Teacher
+        </a>
+    </div>
+
     @if (TempData["Operation"] != null)
     {
         <partial name="View"></partial>
     }
-
-    <h1 class="text-center fw-bold mb-5">
-        <i class="bi bi-person-gear me-2"></i>Teachers Management
-    </h1>
 
     @if (TempData["Error"] != null)
     {
         <div class="alert alert-danger animate__animated animate__shakeX">@TempData["Error"]</div>
     }
 
-    <!-- Header with Responsive Layout -->
-    <div class="row mb-5">
-        <div class="col-md-3 mb-2 mb-md-0">
-            <a href="@Url.Action("Index", "Home")" class="btn btn-secondary w-100">
-                <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
-            </a>
-        </div>
-        <div class="col-md-6 mb-2 mb-md-0">
-            <div class="input-group">
-                <input type="text" id="teacherSearch" class="form-control" placeholder="Search by teacher name..." />
-                <span class="input-group-text">
-                    <i class="bi bi-search"></i>
-                </span>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <a href="@Url.Action("Create")" class="btn btn-primary w-100 animate__animated animate__pulse">
-                <i class="bi bi-plus-circle me-1"></i> Add New Teacher
-            </a>
-        </div>
-    </div>
-
-    <div class="row g-4">
-        @foreach (var teacher in Model.ToList())
+    <div class="teachers-grid" id="teachersGrid">
+        @foreach (var teacher in Model)
         {
-            <div class="col-sm-6 col-md-4 col-lg-3 teacher-item animate__animated animate__fadeInUp" style="animation-delay: @(Model.ToList().IndexOf(teacher) * 0.1 + "s")">
-                <div class="card text-center shadow-sm border-0 rounded-4 p-3 position-relative teacher-card">
-                    <i class="bi bi-person-badge fs-2 text-primary mb-3"></i>
-                    <h3 class="card-title mb-3">@teacher.Name</h3>
+            <div class="teacher-card animate-card" data-name="@teacher.Name.ToLower()">
+                <div class="card-header">
+                    <h3 class="teacher-name">@teacher.Name</h3>
+                </div>
+                <div class="card-body">
                     <div class="teacher-details">
-                        <p class="fw-semibold text-primary mb-1">
-                            <i class="bi bi-clock me-1"></i> Max/Day: @teacher.MaxHoursPerDay
-                        </p>
-                        <p class="fw-semibold text-primary">
-                            <i class="bi bi-calendar-week me-1"></i> Max/Week: @teacher.MaxHoursPerWeek
-                        </p>
+                        <div class="detail-item">
+                            <i class="bi bi-clock"></i>
+                            <span>Max Hours/Day: @teacher.MaxHoursPerDay</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="bi bi-calendar-week"></i>
+                            <span>Max Hours/Week: @teacher.MaxHoursPerWeek</span>
+                        </div>
                     </div>
-
-                    <div class="d-flex justify-content-center mt-4">
-                        <a href="@Url.Action("Edit", new { id = teacher.Id })" class="btn btn-warning rounded-pill me-2">
-                            <i class="bi bi-pencil-square me-1"></i> Edit
-                        </a>
-                        <button type="button" class="btn btn-danger rounded-pill" data-bs-toggle="modal" data-bs-target="#DeleteModal-@teacher.Id">
-                            <i class="bi bi-trash me-1"></i> Delete
-                        </button>
-                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="@Url.Action("Edit", new { id = teacher.Id })" class="action-btn edit-btn">
+                        <i class="bi bi-pencil"></i> Edit
+                    </a>
+                    <button type="button" class="action-btn delete-btn" data-bs-toggle="modal" data-bs-target="#DeleteModal-@teacher.Id">
+                        <i class="bi bi-trash"></i> Delete
+                    </button>
                 </div>
             </div>
 
@@ -105,58 +392,47 @@
             </div>
         }
     </div>
+</div>
 
-    <!-- Custom CSS -->
-    <style>
-        .teacher-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            height: 100%;
-        }
-
-            .teacher-card:hover {
-                transform: translateY(-10px) scale(1.03);
-                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            }
-
-        .teacher-details {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 10px;
-            margin: 10px 0;
-        }
-
-        body.dark-mode .teacher-details {
-            background-color: #2d2d2d;
-        }
-    </style>
+<div class="back-to-top" id="backToTop">
+    <i class="bi bi-arrow-up"></i>
 </div>
 
 @section Scripts {
     <script>
         // Search functionality
-        const searchInput = document.getElementById('teacherSearch');
-        const teacherItems = document.querySelectorAll('.teacher-item');
+        const searchInput = document.getElementById('searchInput');
+        const teacherCards = document.querySelectorAll('.teacher-card');
 
-        searchInput.addEventListener('input', () => {
-            const searchTerm = searchInput.value.toLowerCase();
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
 
-            teacherItems.forEach(item => {
-                const title = item.querySelector('.card-title').textContent.toLowerCase();
-                if (title.includes(searchTerm)) {
-                    item.style.display = '';
+            teacherCards.forEach(card => {
+                const name = card.getAttribute('data-name');
+
+                if (name.includes(searchTerm)) {
+                    card.style.display = 'block';
                 } else {
-                    item.style.display = 'none';
+                    card.style.display = 'none';
                 }
             });
         });
 
-        // Card hover effect
-        document.querySelectorAll('.teacher-card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.transform = 'translateY(-10px) scale(1.03)';
-            });
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = '';
+        // Back to top button
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        backToTop.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
             });
         });
     </script>
