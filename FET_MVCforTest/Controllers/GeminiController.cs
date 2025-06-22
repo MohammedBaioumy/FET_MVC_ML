@@ -313,46 +313,53 @@ namespace FET_MVCforTest.Controllers
 				return NotFound();
 			}
 
-			var article = await _context.SubjectArticles
-				.FirstOrDefaultAsync(a => a.SubjectId == subjectId);
-
-			if (article == null)
+			try
 			{
-				return NotFound("Article not found");
-			}
+				var article = await _context.SubjectArticles
+						.FirstOrDefaultAsync(a => a.SubjectId == subjectId);
 
-			var globalSettings = new GlobalSettings
-			{
-				ColorMode = ColorMode.Color,
-				Orientation = Orientation.Portrait,
-				PaperSize = PaperKind.A4,
-				Margins = new MarginSettings { Top = 10, Bottom = 10, Left = 10, Right = 10 },
-				DocumentTitle = $"{subject.Name} - Scientific Article"
-			};
+				if (article == null)
+				{
+					return NotFound("Article not found");
+				}
 
-			var objectSettings = new ObjectSettings
-			{
-				PagesCount = true,
-				HtmlContent = $@"
+				var globalSettings = new GlobalSettings
+				{
+					ColorMode = ColorMode.Color,
+					Orientation = Orientation.Portrait,
+					PaperSize = PaperKind.A4,
+					Margins = new MarginSettings { Top = 10, Bottom = 10, Left = 10, Right = 10 },
+					DocumentTitle = $"{subject.Name} - Scientific Article"
+				};
+
+				var objectSettings = new ObjectSettings
+				{
+					PagesCount = true,
+					HtmlContent = $@"
             <h1 style='text-align: center;'>{subject.FullScientificName} ({subject.Name})</h1>
             <h3 style='text-align: center;'>Scientific Article</h3>
             <p style='text-align: center;'>Generated on: {article.GeneratedDate.ToString("yyyy-MM-dd")}</p>
             <hr>
             <div style='text-align: justify;'>{article.ArticleContent}</div>
         ",
-				WebSettings = { DefaultEncoding = "utf-8" },
-				HeaderSettings = { FontSize = 9, Right = "Page [page] of [toPage]", Line = true },
-				FooterSettings = { FontSize = 9, Center = "© FET Timetable System" }
-			};
+					WebSettings = { DefaultEncoding = "utf-8" },
+					HeaderSettings = { FontSize = 9, Right = "Page [page] of [toPage]", Line = true },
+					FooterSettings = { FontSize = 9, Center = "© FET Timetable System" }
+				};
 
-			var pdf = new HtmlToPdfDocument()
+				var pdf = new HtmlToPdfDocument()
+				{
+					GlobalSettings = globalSettings,
+					Objects = { objectSettings }
+				};
+
+				var file = _converter.Convert(pdf);
+				return File(file, "application/pdf", $"{subject.Name}_Article.pdf");
+			}
+			catch (Exception )
 			{
-				GlobalSettings = globalSettings,
-				Objects = { objectSettings }
-			};
-
-			var file = _converter.Convert(pdf);
-			return File(file, "application/pdf", $"{subject.Name}_Article.pdf");
+				return RedirectToAction("Error", "Home");
+			}
 		}
 
 		[HttpGet]
