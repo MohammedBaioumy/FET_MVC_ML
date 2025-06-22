@@ -59,6 +59,8 @@ namespace FET_MVCforTest.Controllers
 				_context.Add(activity);
 				await _context.SaveChangesAsync();
 				TempData["Operation"] = "Activity created successfully!";
+				TempData["ToastColor"] = "text-dark-emphasis bg-info";
+
 				return RedirectToAction(nameof(Index));
 			}
 			catch (Exception ex)
@@ -106,6 +108,8 @@ namespace FET_MVCforTest.Controllers
 				_context.Update(activity);
 				 await _context.SaveChangesAsync();
 				TempData["Operation"] = "Activity updated successfully!";
+				TempData["ToastColor"] = "text-dark-emphasis bg-info";
+
 				return RedirectToAction(nameof(Index));
 			}
 			catch (Exception ex)
@@ -129,10 +133,13 @@ namespace FET_MVCforTest.Controllers
 				_context.Activities.Remove(activity);
 				await _context.SaveChangesAsync();
 				TempData["Operation"] = "Activity deleted successfully!";
+				TempData["ToastColor"] = "text-dark-emphasis bg-info";
+
 			}
 			catch (Exception ex)
 			{
 				TempData["Error"] = $"Error while deleting Activity: {ex.Message}";
+
 			}
 
 			return RedirectToAction(nameof(Index));

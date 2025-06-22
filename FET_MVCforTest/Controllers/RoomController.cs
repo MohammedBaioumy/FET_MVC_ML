@@ -45,6 +45,8 @@ namespace FET_MVCforTest.Controllers
 				_context.Add(room);
 				await _context.SaveChangesAsync();
 				TempData["Operation"] = "Room created successfully.";
+				TempData["ToastColor"] = "text-dark-emphasis bg-info";
+
 				return RedirectToAction(nameof(Index));
 			}
 			catch
@@ -79,6 +81,8 @@ namespace FET_MVCforTest.Controllers
 			{
 				await _context.SaveChangesAsync();
 				TempData["Operation"] = "Room updated successfully.";
+				TempData["ToastColor"] = "text-dark-emphasis bg-info";
+
 				return RedirectToAction(nameof(Index));
 			}
 			catch
@@ -103,6 +107,8 @@ namespace FET_MVCforTest.Controllers
 				_context.Rooms.Remove(room);
 				await _context.SaveChangesAsync();
 				TempData["Operation"] = "Room deleted successfully.";
+				TempData["ToastColor"] = "text-dark-emphasis bg-info";
+
 			}
 			catch
 			{

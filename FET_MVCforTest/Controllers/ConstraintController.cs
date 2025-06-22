@@ -49,6 +49,8 @@ namespace FET_MVCforTest.Controllers
 				_context.Constraints.Add(constraint);
 				_context.SaveChanges();
 				TempData["Operation"] = "Constraint added successfully.";
+				TempData["ToastColor"] = "text-dark-emphasis bg-info";
+
 				return RedirectToAction("Index");
 			}
 			catch (Exception ex)
@@ -88,6 +90,8 @@ namespace FET_MVCforTest.Controllers
 				_context.Constraints.Update(constraint);
 				_context.SaveChanges();
 				TempData["Operation"] = "Constraint updated successfully.";
+				TempData["ToastColor"] = "text-dark-emphasis bg-info";
+
 				return RedirectToAction("Index");
 			}
 			catch (Exception ex)
@@ -114,6 +118,8 @@ namespace FET_MVCforTest.Controllers
 				_context.Constraints.Remove(constraint);
 				_context.SaveChanges();
 				TempData["Operation"] = "Constraint deleted successfully.";
+				TempData["ToastColor"] = "text-dark-emphasis bg-info";
+
 			}
 			catch (Exception ex)
 			{

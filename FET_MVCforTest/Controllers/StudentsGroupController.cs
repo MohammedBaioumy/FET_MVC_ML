@@ -50,6 +50,8 @@ namespace FET_MVCforTest.Controllers
 				_context.StudentsGroups.Add(group);
 				await _context.SaveChangesAsync();
 				TempData["Operation"] = "Students group created successfully!";
+				TempData["ToastColor"] = "text-dark-emphasis bg-info";
+
 				return RedirectToAction(nameof(Index));
 			}
 			catch (Exception ex)
@@ -66,6 +68,7 @@ namespace FET_MVCforTest.Controllers
 			if (group == null)
 			{
 				TempData["Error"] = "Students group not found.";
+
 				return RedirectToAction(nameof(Index));
 			}
 
@@ -97,6 +100,8 @@ namespace FET_MVCforTest.Controllers
 				_context.StudentsGroups.Update(group);
 				await _context.SaveChangesAsync();
 				TempData["Operation"] = "Students group updated successfully!";
+				TempData["ToastColor"] = "text-dark-emphasis bg-info";
+
 				return RedirectToAction(nameof(Index));
 			}
 			catch (Exception ex)
@@ -123,6 +128,8 @@ namespace FET_MVCforTest.Controllers
 				_context.StudentsGroups.Remove(group);
 				await _context.SaveChangesAsync();
 				TempData["Operation"] = "Students group deleted successfully!";
+				TempData["ToastColor"] = "text-dark-emphasis bg-info";
+
 			}
 			catch (Exception ex)
 			{

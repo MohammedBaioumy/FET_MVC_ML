@@ -44,6 +44,8 @@ namespace FET_MVCforTest.Controllers
 			await _context.SaveChangesAsync();
 
 			TempData["Operation"] = "Created successfully";
+			TempData["ToastColor"] = "text-dark-emphasis bg-info";
+
 			return RedirectToAction(nameof(Index));
 		}
 
@@ -72,6 +74,8 @@ namespace FET_MVCforTest.Controllers
 			await _context.SaveChangesAsync();
 
 			TempData["Operation"] = "Updated successfully";
+			TempData["ToastColor"] = "text-dark-emphasis bg-info";
+
 			return RedirectToAction(nameof(Index));
 		}
 
@@ -87,6 +91,8 @@ namespace FET_MVCforTest.Controllers
 			await _context.SaveChangesAsync();
 
 			TempData["Operation"] = "Deleted successfully";
+			TempData["ToastColor"] = "text-dark-emphasis bg-info";
+
 			return RedirectToAction(nameof(Index));
 		}
 	}
